@@ -7,10 +7,10 @@
 void lua_autostack_open(void);
 void lua_autostack_close(void);
 
-#define lua_autopush(L, type, c_val) lua_autopush_typeid(L, lua_typeid(type), c_in)
+#define lua_autopush(L, type, c_in) lua_autopush_typeid(L, lua_typeid(type), c_in)
 void lua_autopush_typeid(lua_State* L, lua_autotype type_id, void* c_in);
 
-#define lua_autopop(L, type, py_val, c_out) lua_autopop_typeid(L, lua_typeid(type), c_out)
+#define lua_autopop(L, type, c_out) lua_autopop_typeid(L, lua_typeid(type), c_out)
 void lua_autopop_typeid(lua_State* L, lua_autotype type_id, void* c_out);
 
 typedef void (*lua_autopush_func)(lua_State*, void*);

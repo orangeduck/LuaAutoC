@@ -151,9 +151,44 @@ int lua_autostruct_added_typeid(lua_State* L, lua_autotype type) {
 }
 
 void lua_autostruct_push_typeid(lua_State* L, lua_autotype type, void* c_in) {
-  return;
+
+  struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
+  if (se != NULL) {
+    
+    lua_newtable(L);
+    
+    for(int j = 0; j < se->num_members; j++) {
+      struct_member_entry* sme = se->members[j];
+      lua_pushstring(L, sme->name);
+      lua_autostruct_push_member_typeid(L, type, c_in, sme->name);
+      lua_settable(L, -3);
+    }
+    
+    return;
+  }
+  
+  lua_pushfstring(L, "lua_autostruct: Struct '%s' not registered!", lua_autotype_name(type));
+  lua_error(L);
+
 }
 
 void lua_autostruct_pop_typeid(lua_State* L, lua_autotype type, void* c_out) {
-  return;
+
+  struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
+  if (se != NULL) {
+  
+    for(int j = 0; j < se->num_members; j++) {
+      struct_member_entry* sme = se->members[j];
+      lua_pushstring(L, sme->name);
+      lua_gettable(L, -2);
+      lua_autostruct_pop_member_typeid(L, type, c_out, sme->name);
+    }
+    
+    lua_pop(L, 1);
+    return;
+  }
+  
+  lua_pushfstring(L, "lua_autostruct: Struct '%s' not registered!", lua_autotype_name(type));
+  lua_error(L);
+
 }

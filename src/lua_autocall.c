@@ -77,11 +77,16 @@ static void lua_autocall_entry(lua_State* L, func_entry* fe) {
     arg_using_heap = 1; arg_data = malloc(arg_data_size);
   }
   
-  for(int j = 0; j < fe->num_args; j++) { 
-    lua_autopop_typeid(L, fe->arg_types[j], arg_data);
-    arg_data += lua_autotype_size(fe->arg_types[j]);
+  /* Pop args in reverse order but place in memory in forward order */
+  
+  void* arg_top = arg_data + arg_data_size;
+  
+  for(int j = fe->num_args-1; j >= 0; j--) { 
+    arg_top -= lua_autotype_size(fe->arg_types[j]);
+    lua_autopop_typeid(L, fe->arg_types[j], arg_top);
   }
   
+  arg_data += arg_data_size;
   ret_data += ret_data_size;
   
   /* If not using heap update stack pointers */

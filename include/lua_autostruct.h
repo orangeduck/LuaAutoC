@@ -6,10 +6,12 @@
 void lua_autostruct_open(void);
 void lua_autostruct_close(void);
 
-#define lua_autostruct_push_member(L, type, cstruct, member) lua_autostruct_push_member_typeid(L, lua_typeid(type), cstruct, member)
+#define lua_autostruct_push_member(L, type, cstruct, member) lua_autostruct_push_member_typeid(L, lua_typeid(type), cstruct, #member)
+#define lua_autostruct_push_membername(L, type, cstruct, member) lua_autostruct_push_member_typeid(L, lua_typeid(type), cstruct, member)
 void lua_autostruct_push_member_typeid(lua_State* L, lua_autotype type, void* cstruct, char* member);
 
-#define lua_autostruct_pop_member(L, type, cstruct, member) lua_autostruct_pop_member_typeid(L, lua_typeid(type), cstruct, member)
+#define lua_autostruct_pop_member(L, type, cstruct, member) lua_autostruct_pop_member_typeid(L, lua_typeid(type), cstruct, #member)
+#define lua_autostruct_pop_membername(L, type, cstruct, member) lua_autostruct_pop_member_typeid(L, lua_typeid(type), cstruct, member)
 void lua_autostruct_pop_member_typeid(lua_State* L, lua_autotype type, void* cstruct, char* member);
 
 #define lua_autostruct_has_member(L, type, member) lua_autostruct_has_member_typeid(L, lua_typeid(type), member)
