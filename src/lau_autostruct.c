@@ -159,9 +159,8 @@ void lua_autostruct_push_typeid(lua_State* L, lua_autotype type, void* c_in) {
     
     for(int j = 0; j < se->num_members; j++) {
       struct_member_entry* sme = se->members[j];
-      lua_pushstring(L, sme->name);
       lua_autostruct_push_member_typeid(L, type, c_in, sme->name);
-      lua_settable(L, -3);
+      lua_setfield(L, -2, sme->name);
     }
     
     return;
@@ -179,8 +178,7 @@ void lua_autostruct_pop_typeid(lua_State* L, lua_autotype type, void* c_out) {
   
     for(int j = 0; j < se->num_members; j++) {
       struct_member_entry* sme = se->members[j];
-      lua_pushstring(L, sme->name);
-      lua_gettable(L, -2);
+      lua_getfield(L, -1, sme->name);
       lua_autostruct_pop_member_typeid(L, type, c_out, sme->name);
     }
     

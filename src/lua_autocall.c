@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "lua_autohashtable.h"
@@ -105,8 +106,8 @@ static void lua_autocall_entry(lua_State* L, func_entry* fe) {
   
 }
 
-void lua_autocall_name(lua_State* L, char* func_name) {
-
+void lua_autocall_name(lua_State* L, const char* func_name) {
+  
   func_entry* fe = lua_autohashtable_get(func_table, func_name);
   if (fe != NULL) {
     return lua_autocall_entry(L, fe);

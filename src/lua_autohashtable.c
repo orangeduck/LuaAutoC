@@ -3,13 +3,13 @@
 
 #include "lua_autohashtable.h"
 
-static int hash(char* s, int size) {
+static int hash(const char* s, int size) {
   int h = 0;
   while (*s) h = h * 101 + *s++;
   return abs(h) % size;
 }
 
-static lua_autobucket* lua_autobucket_new(char* string, void* item) {
+static lua_autobucket* lua_autobucket_new(const char* string, void* item) {
   
   lua_autobucket* b = malloc(sizeof(lua_autobucket));
   b->item = item;
@@ -51,7 +51,7 @@ void lua_autohashtable_delete(lua_autohashtable* ht) {
   free(ht);
 }
 
-int lua_autohashtable_contains(lua_autohashtable* ht, char* string) {
+int lua_autohashtable_contains(lua_autohashtable* ht, const char* string) {
 
   if (lua_autohashtable_get(ht, string) == NULL) {
     return 0;
@@ -61,7 +61,7 @@ int lua_autohashtable_contains(lua_autohashtable* ht, char* string) {
 
 }
 
-void* lua_autohashtable_get(lua_autohashtable* ht, char* string) {
+void* lua_autohashtable_get(lua_autohashtable* ht, const char* string) {
 
   int index = hash(string, ht->size);
   lua_autobucket* b = ht->buckets[index];
@@ -80,7 +80,7 @@ void* lua_autohashtable_get(lua_autohashtable* ht, char* string) {
 
 }
 
-void lua_autohashtable_set(lua_autohashtable* ht, char* string, void* item) {
+void lua_autohashtable_set(lua_autohashtable* ht, const char* string, void* item) {
 
   int index = hash(string, ht->size);
   lua_autobucket* b = ht->buckets[index];

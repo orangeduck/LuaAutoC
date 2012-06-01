@@ -9,7 +9,7 @@ void lua_autocall_open(void);
 void lua_autocall_close(void);
 
 #define lua_autocall(L, func) lua_autocall_name(L, #func)
-void lua_autocall_name(lua_State* L, char* func_name);
+void lua_autocall_name(lua_State* L, const char* func_name);
 
 #define lua_autofunc_add_args0(L, func, ret_t) lua_autofunc_add_args0_macro(L, func, ret_t)
 #define lua_autofunc_add_args0_void(L, func, ret_t) lua_autofunc_add_args0_void_macro(L, func, ret_t)
