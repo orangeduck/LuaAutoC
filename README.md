@@ -17,7 +17,9 @@ lua_autoc is here to help.
 PyAutoC
 -------
 
-lua_autoc is based upon my library PyAutoC which provides similar functionality but for the Python/C API. It is largely just a renaming of what I did there, but some of it has been adapated to better fit the semantics of the lua API. Most notably rather than using PyObjects and reference counting the functions are designed for pushing and popping on the lua stack and interacting in that way.
+lua_autoc is based upon my library [PyAutoC](https://github.com/orangeduck/PyAutoC) which provides similar functionality but for the Python/C API. It is largely just a renaming of what I did there, but some of it has been adapated to better fit the semantics of the lua API. Most notably rather than using PyObjects and reference counting the functions are designed for pushing and popping on the lua stack and interacting in that way.
+
+Although I love Python this version of the library is probably more useful. Python already has a huge array of tools for interacting with C code. This library is also better suited to embedding, which Python somewhat frowns upon over extending, but lua has a very strong culture of.
 
 
 Basic Usage 1
@@ -55,7 +57,7 @@ int main(int argc, char **argv) {
 }
 ```
 	
-lua_autoc will call __add\_numbers__ with the lua values on the stack. It will then push the return value as a lua object back onto the stack. No editing of the original function required.
+lua_autoc will call `add\_numbers` with the lua values on the stack. It will then push the return value as a lua object back onto the stack. No editing of the original function required.
 
 	
 Basic Usage 2
@@ -82,7 +84,7 @@ int main(int argc, char **argv) {
   lua_autostruct_addmember(L, vector3, y, float);
   lua_autostruct_addmember(L, vector3, z, float);
 
-	vector3 position = {1.0f, 2.11f, 3.16f};
+  vector3 position = {1.0f, 2.11f, 3.16f};
   
   lua_autostruct_push_member(L, vector3, &position, y);
   
@@ -91,7 +93,7 @@ int main(int argc, char **argv) {
   lua_autoc_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }
 ```
 	
@@ -123,7 +125,7 @@ static void lua_autopop_pair(lua_State* L, void* c_out) {
 lua_autostack_func(pair, lua_autopush_pair, lua_autopop_pair);
 ```
 
-Now it is possible to call any functions with __pair__ as an argument or return type and lua_autoc will handle any conversions automatically. You can also use the registered functions directly in your code in a fairly convenient and natural way using the __lua_autopush__ and __lua_autopop__ macros.
+Now it is possible to call any functions with `pair` as an argument or return type and lua_autoc will handle any conversions automatically. You can also use the registered functions directly in your code in a fairly convenient and natural way using the `lua_autopush` and `lua_autopop` macros.
 
 ```c
 pair p = {1, 2};
@@ -146,6 +148,7 @@ lua_autostruct_addmember(L, person_details, second_name, char*);
 lua_autostruct_addmember(L, person_details, coolness, float);
 
 person_details my_details = {"Daniel", "Holden", 125212.213};
+
 lua_autopush(L, person_details, &my_details);
 
 lua_getfield(L, -1, "first_name");
@@ -157,7 +160,6 @@ printf("Second Name: %s\n", lua_tostring(L, -1));
 lua_pop(L, 1);
 
 lua_pop(L, 1);
-
 
 ```
 
@@ -200,7 +202,7 @@ static void hello_world(char* person) {
 
 static int autocall(lua_State* L) {
   lua_autocall_name(L, lua_tostring(L, 1));
-	lua_remove(L, -2);
+  lua_remove(L, -2);
   return 1;
 }
 
@@ -221,7 +223,7 @@ int main(int argc, char **argv) {
   lua_autoc_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }
 ```
 
@@ -231,7 +233,7 @@ Once you have this basic interface of autocall it is easy to intergrate more com
 Runtime?
 --------
 
-When normally building a lua/C extension all accessible functions must be statically declared in a methods table and compiled. If a developer wants to add more functions to the lua bindings he must add more methods to the table. Using lua_autoc, users and developers can register new functions, structs and type conversions _as the program is running_. This means developers can use and extend your lua API without ever touching the vanilla lua/C api!
+When normally building a lua/C extension all accessible functions must be statically declared in a methods table and compiled. If a developer wants to add more functions to the lua bindings he must add more methods to the table. Using lua_autoc, users and developers can register new functions, structs and type conversions as the program is running. This means developers can use and extend your lua API without ever touching the vanilla lua/C API!
 
 It also means that the job of wrapping is much easier - you can use strings and dynamic elements directly from lua. For example...
 
