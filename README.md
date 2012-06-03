@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 }
 ```
 	
-lua_autoc will call `add\_numbers` with the Lua values on the stack. It will then push the return value as a Lua object back onto the stack. No editing of the original function required.
+lua_autoc will call `add_numbers` with the Lua values on the stack. It will then push the return value as a Lua object back onto the stack. No editing of the original function required.
 
 	
 Basic Usage 2
@@ -80,9 +80,9 @@ int main(int argc, char **argv) {
   lua_autoc_open();
 	
   lua_autostruct_add(L, vector3);
-  lua_autostruct_addmember(L, vector3, x, float);
-  lua_autostruct_addmember(L, vector3, y, float);
-  lua_autostruct_addmember(L, vector3, z, float);
+  lua_autostruct_add_member(L, vector3, x, float);
+  lua_autostruct_add_member(L, vector3, y, float);
+  lua_autostruct_add_member(L, vector3, z, float);
 
   vector3 position = {1.0f, 2.11f, 3.16f};
   
@@ -143,9 +143,9 @@ typedef struct {
 } person_details;
 
 lua_autostruct_add(L, person_details);
-lua_autostruct_addmember(L, person_details, first_name, char*);
-lua_autostruct_addmember(L, person_details, second_name, char*);
-lua_autostruct_addmember(L, person_details, coolness, float);
+lua_autostruct_add_member(L, person_details, first_name, char*);
+lua_autostruct_add_member(L, person_details, second_name, char*);
+lua_autostruct_add_member(L, person_details, coolness, float);
 
 person_details my_details = {"Daniel", "Holden", 125212.213};
 
@@ -172,8 +172,8 @@ I've included a basic python script which will autogenerate lua_autoc code for s
 $ python autogen.py ../Corange/include/assets/sound.h
 
 lua_autostruct_add(sound);
-lua_autostruct_addmember(sound, data, char*);
-lua_autostruct_addmember(sound, length, int);
+lua_autostruct_add_member(sound, data, char*);
+lua_autostruct_add_member(sound, length, int);
 
 lua_autofunc_add_args1(wav_load_file, sound*, char*);
 lua_autofunc_add_args1_void(sound_delete, void, sound*);
@@ -233,7 +233,7 @@ Once you have this basic interface of autocall it is easy to intergrate more com
 Runtime?
 --------
 
-When normally building a Lua/C extension all accessible functions must be statically declared in a methods table and compiled. If a developer wants to add more functions to the Lua bindings he must add more methods to the table. Using lua_autoc, users and developers can register new functions, structs and type conversions as the program is running. This means developers can use and extend your Lua API without ever touching the vanilla Lua/C API!
+When normally building a Lua/C extension all accessible functions must be statically declared in a methods table and compiled. If a developer wants to add more functions to the Lua bindings he must add more methods to the table. Using lua_autoc, users and developers can register new functions, structs and type conversions as the program is running. This means developers can use and extend your Lua API without ever touching the lua stack!
 
 It also means that the job of wrapping is much easier - you can use strings and dynamic elements directly from Lua. For example...
 
@@ -270,7 +270,7 @@ typedef struct {
 static int birdie_index(lua_State* L) {
   const char* member = lua_tostring(L, -1);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_push_membername(L, birdie, self, member);
+  lua_autostruct_push_member_name(L, birdie, self, member);
   lua_remove(L, -2);
   lua_remove(L, -2);
   return 1;
@@ -279,14 +279,14 @@ static int birdie_index(lua_State* L) {
 static int birdie_setindex(lua_State* L) {
   const char* member = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_pop_member(L, birdie, self, member);
+  lua_autostruct_pop_member_name(L, birdie, self, member);
   lua_pop(L, 2);
   return 0;
 }
   
 lua_autostruct_add(L, birdie);
-lua_autostruct_addmember(L, birdie, name, char*);
-lua_autostruct_addmember(L, birdie, num_wings, int);
+lua_autostruct_add_member(L, birdie, name, char*);
+lua_autostruct_add_member(L, birdie, num_wings, int);
 
 lua_pushcfunction(L, birdie_index);
 lua_setglobal(L, "birdie_index");
@@ -299,7 +299,7 @@ A lot less work than writing a bunch of getters and setters!
 
 The `get_instance_ptr` function is left for the user to implement and there are lots of options. The idea is that somehow the lua instance should tell you how to get a pointer to the actual struct instance in C which it represents. One option is to store C pointers in the lua instance using a new data type. An alternative I like is to just store a string in the lua instance which uniquely identifies it. Once you have this, in C it is possible to just look this string up in a dictionary or similar to find the actual pointer.
 
-For fun why not try also making the allocation and deletion functions call some C functions which allocate and decallocate the structure you are emulating, storing some data to let you identify the instance later. It is also easy to extend the above technique so that, as well as members, the class is able to look up and execute methods!
+For fun why not try also making the lua metatable allocation and decallocation functions call some C functions which allocate and decallocate the structure you are emulating, storing some data to let you identify the instance later. It is also easy to extend the above technique so that, as well as members, the class is able to look up and execute methods!
 
 The true power of lua_autoc comes if you look a level deeper. If you use `lua_autostruct_push_member_typeid` or `lua_autostruct_pop_member_typeid` you can even extend the above code to work for arbritary structs/classes which developers can add to.
 

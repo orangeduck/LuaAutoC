@@ -14,9 +14,9 @@ int main(int argc, char **argv) {
   lua_autoc_open();
 	
   lua_autostruct_add(L, vector3);
-  lua_autostruct_addmember(L, vector3, x, float);
-  lua_autostruct_addmember(L, vector3, y, float);
-  lua_autostruct_addmember(L, vector3, z, float);
+  lua_autostruct_add_member(L, vector3, x, float);
+  lua_autostruct_add_member(L, vector3, y, float);
+  lua_autostruct_add_member(L, vector3, z, float);
 
 	vector3 position = {1.0f, 2.11f, 3.16f};
   

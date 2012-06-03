@@ -19,7 +19,7 @@ static birdie* get_instance_ptr(lua_State* L) {
 static int birdie_index(lua_State* L) {
   const char* member = lua_tostring(L, -1);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_push_membername(L, birdie, self, member);
+  lua_autostruct_push_member_name(L, birdie, self, member);
   lua_remove(L, -2);
   lua_remove(L, -2);
   return 1;
@@ -28,7 +28,7 @@ static int birdie_index(lua_State* L) {
 static int birdie_setindex(lua_State* L) {
   const char* member = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_pop_member(L, birdie, self, member);
+  lua_autostruct_pop_member_name(L, birdie, self, member);
   lua_pop(L, 2);
   return 0;
 }
@@ -43,8 +43,8 @@ int main(int argc, char **argv) {
   lua_autoc_open();
   
   lua_autostruct_add(L, birdie);
-  lua_autostruct_addmember(L, birdie, name, char*);
-  lua_autostruct_addmember(L, birdie, num_wings, int);
+  lua_autostruct_add_member(L, birdie, name, char*);
+  lua_autostruct_add_member(L, birdie, num_wings, int);
   
   lua_pushcfunction(L, birdie_index);
   lua_setglobal(L, "birdie_index");

@@ -35,9 +35,9 @@ int main(int argc, char **argv) {
 	lua_autostack_func(pair, lua_autopush_pair, lua_autopop_pair);
 	
   lua_autostruct_add(L, person_details);
-  lua_autostruct_addmember(L, person_details, first_name, char*);
-  lua_autostruct_addmember(L, person_details, second_name, char*);
-  lua_autostruct_addmember(L, person_details, coolness, float);
+  lua_autostruct_add_member(L, person_details, first_name, char*);
+  lua_autostruct_add_member(L, person_details, second_name, char*);
+  lua_autostruct_add_member(L, person_details, coolness, float);
 
   pair p = {1, 2};
   person_details my_details = {"Daniel", "Holden", 125212.213};

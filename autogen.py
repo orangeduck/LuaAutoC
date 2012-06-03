@@ -23,7 +23,7 @@ for typedef in typedefs:
         in_match = re.search(r"\s*([\w\*]+)\s*(\w+)\s*", d)
         if in_match is not None: pairs.append(in_match.groups())
     print "lua_autostruct_add(%s);" % ctype
-    for p in pairs: print "lua_autostruct_addmember(%s, %s, %s);" % (ctype, p[1], p[0])
+    for p in pairs: print "lua_autostruct_add_member(%s, %s, %s);" % (ctype, p[1], p[0])
     print ""
 
 for funcdef in funcdefs:

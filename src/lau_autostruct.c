@@ -46,7 +46,7 @@ void lua_autostruct_close(void) {
 
 }
 
-void lua_autostruct_push_member_typeid(lua_State* L, lua_autotype type, void* cstruct, char* member) {
+void lua_autostruct_push_member_typeid(lua_State* L, lua_autotype type, void* cstruct, const char* member) {
 
   struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
   if (se != NULL) {
@@ -66,7 +66,7 @@ void lua_autostruct_push_member_typeid(lua_State* L, lua_autotype type, void* cs
   lua_error(L);
 }
 
-void lua_autostruct_pop_member_typeid(lua_State* L, lua_autotype type, void* cstruct, char* member) {
+void lua_autostruct_pop_member_typeid(lua_State* L, lua_autotype type, void* cstruct, const char* member) {
 
   struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
   if (se != NULL) {
@@ -86,7 +86,7 @@ void lua_autostruct_pop_member_typeid(lua_State* L, lua_autotype type, void* cst
   lua_error(L);
 }
 
-int lua_autostruct_has_member_typeid(lua_State* L, lua_autotype type,  char* member) {
+int lua_autostruct_has_member_typeid(lua_State* L, lua_autotype type,  const char* member) {
 
   struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
   if (se != NULL) {
@@ -117,7 +117,7 @@ void lua_autostruct_add_typid(lua_State* L, lua_autotype type) {
 
 }
 
-void lua_autostruct_addmember_typeid(lua_State* L, lua_autotype type, char* member, lua_autotype member_type, int offset) {
+void lua_autostruct_add_member_typeid(lua_State* L, lua_autotype type, const char* member, lua_autotype member_type, int offset) {
 
   struct_entry* se = lua_autohashtable_get(struct_table, lua_autotype_name(type));
   if (se != NULL) {
