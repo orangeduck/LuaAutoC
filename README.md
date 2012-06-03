@@ -233,6 +233,8 @@ Once you have this basic interface of autocall it is easy to intergrate more com
 Runtime?
 --------
 
+Many developers like to wrap their libraries externally before compile time using programs such as SWIG. This approach has many benefits but can be somewhat brittle and lacking in control. lua_autoc takes a different approach by storing type information and doing conversions and anything else needed at runtime. As well as being a more controlled approach this also allows for some interesting options for dynamic behaviour.
+
 When normally building a Lua/C extension all accessible functions must be statically declared in a methods table and compiled. If a developer wants to add more functions to the Lua bindings he must add more methods to the table. Using lua_autoc, users and developers can register new functions, structs and type conversions as the program is running. This means developers can use and extend your Lua API without ever touching the lua stack!
 
 It also means that the job of wrapping is much easier - you can use strings and dynamic elements directly from Lua. For example...
