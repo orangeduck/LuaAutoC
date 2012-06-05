@@ -6,7 +6,7 @@ OBJ_FILES= $(addprefix obj/,$(notdir $(C_FILES:.c=.o)))
 PLATFORM = $(shell uname)
 
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
-	OUT= liblua_autoc.so
+	OUT= liblautoc.so
 	INCS= -I ./include -I/usr/include/lua52
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g -fPIC
 	LFLAGS= -llua5.2
@@ -14,7 +14,7 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 endif
 
 ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
-	OUT= lua_autoc.dll
+	OUT= lautoc.dll
 	INCS= -I ./include -I./lua52/include
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g
 	LFLAGS= -g -L./lua52 -L./ -llua52 -lmingw32

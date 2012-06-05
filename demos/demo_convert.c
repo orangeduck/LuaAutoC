@@ -3,22 +3,23 @@
 
 #include "lua.h"
 #include "lauxlib.h"
-#include "lua_autoc.h"
+#include "lautoc.h"
 
 typedef struct {
   int x, y;
 } pair;
 
-static void lua_autopush_pair(lua_State* L, void* c_in) {
+static int luaA_push_pair(lua_State* L, void* c_in) {
   pair p = *(pair*)c_in;
   lua_pushinteger(L, p.x);
   lua_pushinteger(L, p.y);
+  return 2;
 }
 
-static void lua_autopop_pair(lua_State* L, void* c_out) {
+static void luaA_to_pair(lua_State* L, void* c_out, int index) {
   pair* p = (pair*)c_out;
-  p->y = lua_tointeger(L, -1); lua_pop(L, 1);
-  p->x = lua_tointeger(L, -1); lua_pop(L, 1);
+  p->y = lua_tointeger(L, index);
+  p->x = lua_tointeger(L, index-1);
 }
 
 typedef struct {
@@ -30,23 +31,23 @@ typedef struct {
 int main(int argc, char **argv) {
 	
   lua_State* L = luaL_newstate();
-  lua_autoc_open();
+  luaA_open();
 	
-	lua_autostack_func(pair, lua_autopush_pair, lua_autopop_pair);
+	luaA_stack_func(pair, luaA_push_pair, luaA_to_pair);
 	
-  lua_autostruct_add(L, person_details);
-  lua_autostruct_add_member(L, person_details, first_name, char*);
-  lua_autostruct_add_member(L, person_details, second_name, char*);
-  lua_autostruct_add_member(L, person_details, coolness, float);
+  luaA_struct_add(L, person_details);
+  luaA_struct_add_member(L, person_details, first_name, char*);
+  luaA_struct_add_member(L, person_details, second_name, char*);
+  luaA_struct_add_member(L, person_details, coolness, float);
 
   pair p = {1, 2};
   person_details my_details = {"Daniel", "Holden", 125212.213};
   
-  lua_autopush(L, pair, &p);
+  luaA_push(L, pair, &p);
   printf("Pair: (%s, %s)\n", lua_tostring(L, -2), lua_tostring(L, -1));
   lua_pop(L, 2);
   
-  lua_autopush(L, person_details, &my_details);
+  luaA_push(L, person_details, &my_details);
   
   lua_getfield(L, -1, "first_name");
   printf("First Name: %s\n", lua_tostring(L, -1));
@@ -58,8 +59,7 @@ int main(int argc, char **argv) {
   
   lua_pop(L, 1);
   
-  
-  lua_autoc_close();
+  luaA_close();
   lua_close(L);
 	
 	return 0;

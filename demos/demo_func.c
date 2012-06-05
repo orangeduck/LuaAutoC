@@ -2,7 +2,7 @@
 
 #include "lua.h"
 #include "lauxlib.h"
-#include "lua_autoc.h"
+#include "lautoc.h"
 
 static float add_numbers(int first, float second) {
   return first + second;
@@ -11,19 +11,20 @@ static float add_numbers(int first, float second) {
 int main(int argc, char **argv) {
   
   lua_State* L = luaL_newstate();
-  lua_autoc_open();
+  luaA_open();
   
-  lua_autofunc_add_args2(L, add_numbers, float, int, float);
+  luaA_func_add_args2(L, add_numbers, float, int, float);
   
-  lua_pushinteger(L, 5);
   lua_pushnumber(L, 6.13);
-  lua_autocall(L, add_numbers);
+  lua_pushinteger(L, 5);
+  luaA_call(L, add_numbers);
   
   printf("Result: %f\n", lua_tonumber(L, -1));
   
-  lua_autoc_close();
+  lua_settop(L, 0);
+  
+  luaA_close();
   lua_close(L);
   
   return 0;
-  
 }

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lua_autotype.h"
+#include "luaA_type.h"
 
 typedef char* type_name;
 typedef int type_size;
@@ -13,13 +13,13 @@ static type_size* type_sizes;
 static int num_types = 0;
 static int num_reserved_types = 128;
 
-void lua_autotype_open(void) {
+void luaA_type_open(void) {
   
   type_names = malloc(sizeof(type_name) * num_reserved_types);
   type_sizes = malloc(sizeof(type_size) * num_reserved_types);
 }
 
-void lua_autotype_close(void) {
+void luaA_type_close(void) {
   
   for(int i = 0; i < num_types; i++) {
     free(type_names[i]);
@@ -29,7 +29,7 @@ void lua_autotype_close(void) {
   free(type_sizes);
 }
 
-lua_autotype lua_autotype_push(char* type, int size) {
+luaA_Type luaA_type_add(char* type, int size) {
   
   for(int i = 0; i < num_types; i++) {
     if (strcmp(type, type_names[i]) == 0) return i;
@@ -49,7 +49,7 @@ lua_autotype lua_autotype_push(char* type, int size) {
   return num_types-1;
 }
 
-lua_autotype lua_autotype_find(char* type) {
+luaA_Type luaA_type_find(char* type) {
 
   for(int i = 0; i < num_types; i++) {
     if (strcmp(type, type_names[i]) == 0) return i;
@@ -58,12 +58,12 @@ lua_autotype lua_autotype_find(char* type) {
   return -1;
 }
 
-char* lua_autotype_name(lua_autotype id) {
+char* luaA_type_name(luaA_Type id) {
   if (id == -1) return "Unknown Type";
   return type_names[id];
 }
 
-int lua_autotype_size(lua_autotype id) {
+int luaA_type_size(luaA_Type id) {
   if (id == -1) return -1;
   return type_sizes[id];
 }

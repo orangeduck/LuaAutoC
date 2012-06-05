@@ -4,7 +4,7 @@
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
-#include "lua_autoc.h"
+#include "lautoc.h"
 
 typedef struct {
   char* name;
@@ -17,19 +17,15 @@ static birdie* get_instance_ptr(lua_State* L) {
 }
 
 static int birdie_index(lua_State* L) {
-  const char* member = lua_tostring(L, -1);
+  const char* membername = lua_tostring(L, -1);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_push_member_name(L, birdie, self, member);
-  lua_remove(L, -2);
-  lua_remove(L, -2);
-  return 1;
+  return luaA_struct_push_member_name(L, birdie, self, membername);
 }
 
 static int birdie_setindex(lua_State* L) {
-  const char* member = lua_tostring(L, -2);
+  const char* membername = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
-  lua_autostruct_pop_member_name(L, birdie, self, member);
-  lua_pop(L, 2);
+  luaA_struct_to_member_name(L, birdie, self, membername, -1);
   return 0;
 }
 
@@ -40,11 +36,11 @@ int main(int argc, char **argv) {
   
   lua_State* L = luaL_newstate();
   luaL_openlibs(L);
-  lua_autoc_open();
+  luaA_open();
   
-  lua_autostruct_add(L, birdie);
-  lua_autostruct_add_member(L, birdie, name, char*);
-  lua_autostruct_add_member(L, birdie, num_wings, int);
+  luaA_struct_add(L, birdie);
+  luaA_struct_add_member(L, birdie, name, char*);
+  luaA_struct_add_member(L, birdie, num_wings, int);
   
   lua_pushcfunction(L, birdie_index);
   lua_setglobal(L, "birdie_index");
@@ -55,8 +51,8 @@ int main(int argc, char **argv) {
   luaL_dostring(L, ""
     "Birdie = {}\n"
     "setmetatable(Birdie, Birdie)\n"
-    "function Birdie:__index(i) return birdie_index(self, i) end\n"
-    "function Birdie:__setindex(i, x) return birdie_setindex(self, i, x) end\n"
+    "Birdie.__index = birdie_index\n"
+    "Birdie.__setindex = birdie_setindex\n"
     "function Birdie.__call()\n"
     "  local self = {}\n"
     "  setmetatable(self, Birdie)\n"
@@ -69,7 +65,7 @@ int main(int argc, char **argv) {
     "\n"
     );
   
-  lua_autoc_close();
+  luaA_close();
   lua_close(L);
   
   return 0;
