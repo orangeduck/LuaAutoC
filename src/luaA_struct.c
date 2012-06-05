@@ -157,7 +157,7 @@ int luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type, const char*
   return 0;
 }
 
-void luaA_struct_add_typeid(lua_State* L, luaA_Type type) {
+void luaA_struct_typeid(lua_State* L, luaA_Type type) {
 
   struct_entry* se = malloc(sizeof(struct_entry));
   se->type_id = type;
@@ -169,7 +169,7 @@ void luaA_struct_add_typeid(lua_State* L, luaA_Type type) {
 
 }
 
-void luaA_struct_add_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, int offset) {
+void luaA_struct_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, int offset) {
 
   struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
   if (se != NULL) {
@@ -195,7 +195,7 @@ void luaA_struct_add_member_typeid(lua_State* L, luaA_Type type, const char* mem
   lua_error(L);
 }
 
-int luaA_struct_is_added_typeid(lua_State* L, luaA_Type type) {
+int luaA_struct_registered_typeid(lua_State* L, luaA_Type type) {
 
   struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
   if (se == NULL) { return 0; } else { return 1; }

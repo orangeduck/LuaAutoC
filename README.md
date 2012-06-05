@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_func_add_args2(L, add_numbers, float, int, float);
+  luaA_function_args2(L, add_numbers, float, int, float);
   
   lua_pushnumber(L, 6.13);
   lua_pushinteger(L, 5);
@@ -82,12 +82,12 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
 	
-  luaA_struct_add(L, vector3);
-  luaA_struct_add_member(L, vector3, x, float);
-  luaA_struct_add_member(L, vector3, y, float);
-  luaA_struct_add_member(L, vector3, z, float);
+  luaA_struct(L, vector3);
+  luaA_struct_member(L, vector3, x, float);
+  luaA_struct_member(L, vector3, y, float);
+  luaA_struct_member(L, vector3, z, float);
   
-	vector3 position = {1.0f, 2.11f, 3.16f};
+  vector3 position = {1.0f, 2.11f, 3.16f};
   
   luaA_struct_push_member(L, vector3, &position, y);
   
@@ -98,9 +98,8 @@ int main(int argc, char **argv) {
   luaA_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }
-
 ```
 	
 Structs work similarly to their functional counterparts. They can be accessed at runtime and do automatic conversion of types. They provide the ability to push members onto the stack, and also to take objects off and store them in members.
@@ -129,7 +128,7 @@ static void luaA_to_pair(lua_State* L, void* c_out, int index) {
   p->x = lua_tointeger(L, index-1);
 }
 
-luaA_stack_func(pair, luaA_push_pair, luaA_to_pair);
+luaA_conversion(pair, luaA_push_pair, luaA_to_pair);
 ```
 
 Now it is possible to call any functions with `pair` as an argument or return type and Lua AutoC will handle any conversions automatically. You can also use the registered functions directly in your code in a fairly convenient and natural way using the `luaA_push` and `luaA_to` macros.
@@ -148,10 +147,10 @@ typedef struct {
   float coolness;
 } person_details;
 
-luaA_struct_add(L, person_details);
-luaA_struct_add_member(L, person_details, first_name, char*);
-luaA_struct_add_member(L, person_details, second_name, char*);
-luaA_struct_add_member(L, person_details, coolness, float);
+luaA_struct(L, person_details);
+luaA_struct_member(L, person_details, first_name, char*);
+luaA_struct_member(L, person_details, second_name, char*);
+luaA_struct_member(L, person_details, coolness, float);
 
 person_details my_details = {"Daniel", "Holden", 125212.213};
 
@@ -166,7 +165,6 @@ printf("Second Name: %s\n", lua_tostring(L, -1));
 lua_pop(L, 1);
 
 lua_pop(L, 1);
-
 ```
 
 Using C headers
@@ -177,12 +175,12 @@ I've included a basic Lua script which will autogenerate Lua AutoC code for stru
 ```
 $ lua autogen.lua ../Corange/include/assets/sound.h
 
-luaA_struct_add(sound);
-luaA_struct_add_member(sound, data, char*);
-luaA_struct_add_member(sound, length, int);
+luaA_struct(sound);
+luaA_struct_member(sound, data, char*);
+luaA_struct_member(sound, length, int);
 
-luaA_func_add_args1(wav_load_file, sound*, char*);
-luaA_func_add_args1_void(sound_delete, void, sound*);
+luaA_function_args1(wav_load_file, sound*, char*);
+luaA_function_args1_void(sound_delete, void, sound*);
 ```
 
 Extended Usage 1
@@ -203,7 +201,7 @@ static float add_numbers(int first, float second) {
 }
 
 static void hello_world(char* person) {
-	printf("Hello %s!", person);
+  printf("Hello %s!", person);
 }
 
 static int autocall(lua_State* L) {
@@ -215,8 +213,8 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_func_add_args2(L, add_numbers, float, int, float);
-  luaA_func_add_args1_void(L, hello_world, void, char*);
+  luaA_function_args2(L, add_numbers, float, int, float);
+  luaA_function_args1_void(L, hello_world, void, char*);
   
   lua_pushcfunction(L, autocall);
   lua_setglobal(L, "autocall");
@@ -227,7 +225,7 @@ int main(int argc, char **argv) {
   luaA_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }
 ```
 
@@ -286,9 +284,9 @@ static int birdie_setindex(lua_State* L) {
   return 0;
 }
   
-luaA_struct_add(L, birdie);
-luaA_struct_add_member(L, birdie, name, char*);
-luaA_struct_add_member(L, birdie, num_wings, int);
+luaA_struct(L, birdie);
+luaA_struct_member(L, birdie, name, char*);
+luaA_struct_member(L, birdie, num_wings, int);
 
 lua_pushcfunction(L, birdie_index);
 lua_setglobal(L, "birdie_index");
@@ -313,29 +311,27 @@ Managing Behaviour
 Often in C, the same types can have different meanings. For example an `int*` could either mean that a function wants an array of integers or that it outputs some integer. We can change the behaviour of Lua AutoC without changing the function signature by using typedefs and new conversion functions. Then on function registration you just use the newly defined type rather than the old one. Providing the types are true aliases there wont be any problems with converting types or breaking the artificial stack.
 
 ```c
-
 static void print_int_list(int* list, int num_ints) {
-	for(int i = 0; i < num_ints; i++) {
-		printf("Int %i: %i\n", i, list[i]);
-	}
+  for(int i = 0; i < num_ints; i++) {
+    printf("Int %i: %i\n", i, list[i]);
+  }
 }
 
 typedef int* int_list;
 
 static int list_space[512];
 static void luaA_to_int_list(lau_State* L, void* c_out, int index) {
-	for(int i = 1; i <= luaL_getn(L, index); i++) {
+  for(int i = 1; i <= luaL_getn(L, index); i++) {
     lua_pushinteger(L, i);
     lua_gettable(L, index-1);
-		list_space[i] = lua_tointeger(L, index); lua_pop(L, 1);
-	}
-	*(int_list*)c_out = list_space;
+	  list_space[i] = lua_tointeger(L, index); lua_pop(L, 1);
+  }
+  *(int_list*)c_out = list_space;
 }
 
-luaA_stack_pop_func(int_list, luaA_pop_int_list);
+luaA_conversion_to(int_list, luaA_pop_int_list);
 
-luaA_func_add_args2_void(print_int_list, void, int_list, int);
-
+luaA_function_args2_void(print_int_list, void, int_list, int);
 ```
 
 As you can probably see, automatic wrapping and type conversion becomes hard when memory management and pointers are involved. I'm looking at ways to improve this, perhaps with the ability to register 'before' and 'after' methods for certain functions or conversions.
@@ -364,8 +360,8 @@ FAQ
   Unfortunately this is unavoidable without writing complex assembly code. Just remember that the argument count must be specified in the name and also if the function returns void. All the macros in Lua AutoC throw readable errors (E.G on trying to register a struct member that does not exist, or use a type that does not exist), so don't worry to much about messing the system with a typo - in general it wont let you.
 
 ```c
-luaA_func_add_args2(add_numbers, float, int, float);
-luaA_func_add_args3_void(add_numbers_message, void, char*, int, float);
+luaA_function_args2(add_numbers, float, int, float);
+luaA_function_args3_void(add_numbers_message, void, char*, int, float);
 ```
 
 * Is Lua AutoC slow?

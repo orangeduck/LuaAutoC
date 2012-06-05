@@ -33,12 +33,12 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
 	
-	luaA_stack_func(pair, luaA_push_pair, luaA_to_pair);
+	luaA_conversion(pair, luaA_push_pair, luaA_to_pair);
 	
-  luaA_struct_add(L, person_details);
-  luaA_struct_add_member(L, person_details, first_name, char*);
-  luaA_struct_add_member(L, person_details, second_name, char*);
-  luaA_struct_add_member(L, person_details, coolness, float);
+  luaA_struct(L, person_details);
+  luaA_struct_member(L, person_details, first_name, char*);
+  luaA_struct_member(L, person_details, second_name, char*);
+  luaA_struct_member(L, person_details, coolness, float);
 
   pair p = {1, 2};
   person_details my_details = {"Daniel", "Holden", 125212.213};

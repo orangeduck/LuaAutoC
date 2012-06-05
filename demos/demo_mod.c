@@ -10,7 +10,7 @@ static float add_numbers(int first, float second) {
 }
 
 static void hello_world(char* person) {
-	printf("Hello %s!", person);
+  printf("Hello %s!", person);
 }
 
 static int autocall(lua_State* L) {
@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_func_add_args2(L, add_numbers, float, int, float);
-  luaA_func_add_args1_void(L, hello_world, void, char*);
+  luaA_function_args2(L, add_numbers, float, int, float);
+  luaA_function_args1_void(L, hello_world, void, char*);
   
   lua_pushcfunction(L, autocall);
   lua_setglobal(L, "autocall");
@@ -34,5 +34,5 @@ int main(int argc, char **argv) {
   luaA_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }

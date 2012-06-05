@@ -16,14 +16,14 @@ void luaA_to_typeid(lua_State* L, luaA_Type type_id, void* c_out, int index);
 typedef int (*luaA_Pushfunc)(lua_State*, void*);
 typedef void (*luaA_Tofunc)(lua_State*, void*, int);
 
-#define luaA_stack_func(type, push_func, to_func) luaA_stack_func_typeid(luaA_type_id(type), push_func, to_func);
-void luaA_stack_func_typeid(luaA_Type type_id, luaA_Pushfunc push_func, luaA_Tofunc to_func);
+#define luaA_conversion(type, push_func, to_func) luaA_conversion_typeid(luaA_type_id(type), push_func, to_func);
+void luaA_conversion_typeid(luaA_Type type_id, luaA_Pushfunc push_func, luaA_Tofunc to_func);
 
-#define luaA_stack_push_func(type, func) luaA_stack_push_func_typeid(luaA_type_id(type), func)
-void luaA_stack_push_func_typeid(luaA_Type type_id, luaA_Pushfunc func);
+#define luaA_conversion_push(type, func) luaA_conversion_push_typeid(luaA_type_id(type), func)
+void luaA_conversion_push_typeid(luaA_Type type_id, luaA_Pushfunc func);
 
-#define luaA_stack_to_func(type, func) luaA_stack_to_func_typeid(luaA_type_id(type), func)
-void luaA_stack_to_func_typeid(luaA_Type type_id, luaA_Tofunc func);
+#define luaA_conversion_to(type, func) luaA_conversion_to_typeid(luaA_type_id(type), func)
+void luaA_conversion_to_typeid(luaA_Type type_id, luaA_Tofunc func);
 
 
 int luaA_push_char(lua_State* L, void* c_in);

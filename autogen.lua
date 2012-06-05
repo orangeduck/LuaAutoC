@@ -27,7 +27,7 @@ print("")
 
 for k,v in pairs(typedefs) do
   local _, _, members, typename = string.find(v, "typedef struct {(.-)} (%w-);")
-  print(string.format("luaA_struct_add(%s);", typename))
+  print(string.format("luaA_struct(%s);", typename))
   
   function string:split(sep)
     local sep, fields = sep or ":", {}
@@ -38,7 +38,7 @@ for k,v in pairs(typedefs) do
   
   for _, mem in pairs(members:split(";")) do
     local meminfo = mem:split(" ")
-    print(string.format("luaA_struct_add_member(%s, %s, %s);", typename, meminfo[2], meminfo[1]))
+    print(string.format("luaA_struct_member(%s, %s, %s);", typename, meminfo[2], meminfo[1]))
   end
   
   print("")
@@ -57,7 +57,7 @@ for k,v in pairs(funcdefs) do
   local voidstring = ""
   if typename == "void" then voidstring = "_void" end
   
-  fstring = string.format("luaA_func_add_args%i%s(%s, %s", #argtypes, voidstring, name, typename)
+  fstring = string.format("luaA_function_args%i%s(%s, %s", #argtypes, voidstring, name, typename)
   for _, v in pairs(argtypes) do fstring = fstring .. string.format(", %s", v) end
   fstring = fstring .. ");"
   

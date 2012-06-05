@@ -13,12 +13,12 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
 	
-  luaA_struct_add(L, vector3);
-  luaA_struct_add_member(L, vector3, x, float);
-  luaA_struct_add_member(L, vector3, y, float);
-  luaA_struct_add_member(L, vector3, z, float);
+  luaA_struct(L, vector3);
+  luaA_struct_member(L, vector3, x, float);
+  luaA_struct_member(L, vector3, y, float);
+  luaA_struct_member(L, vector3, z, float);
   
-	vector3 position = {1.0f, 2.11f, 3.16f};
+  vector3 position = {1.0f, 2.11f, 3.16f};
   
   luaA_struct_push_member(L, vector3, &position, y);
   
@@ -29,5 +29,5 @@ int main(int argc, char **argv) {
   luaA_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }

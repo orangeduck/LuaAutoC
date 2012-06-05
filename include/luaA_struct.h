@@ -27,14 +27,14 @@ int luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  int offs
 int luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
 
-#define luaA_struct_add(L, type) luaA_struct_add_typeid(L, luaA_type_id(type))
-void luaA_struct_add_typeid(lua_State* L, luaA_Type type);
+#define luaA_struct(L, type) luaA_struct_typeid(L, luaA_type_id(type))
+void luaA_struct_typeid(lua_State* L, luaA_Type type);
 
-#define luaA_struct_add_member(L, type, member, member_type) luaA_struct_add_member_typeid(L, luaA_type_id(type), #member, luaA_type_id(member_type), luaA_struct_offset(type, member))
-void luaA_struct_add_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, int offset);
+#define luaA_struct_member(L, type, member, member_type) luaA_struct_member_typeid(L, luaA_type_id(type), #member, luaA_type_id(member_type), luaA_struct_offset(type, member))
+void luaA_struct_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, int offset);
 
-#define luaA_struct_is_added(L, type) luaA_struct_is_added_typeid(L, luaA_type_id(type))
-int luaA_struct_is_added_typeid(lua_State* L, luaA_Type type);
+#define luaA_struct_registered(L, type) luaA_struct_registered_typeid(L, luaA_type_id(type))
+int luaA_struct_registered_typeid(lua_State* L, luaA_Type type);
 
 
 #define luaA_struct_push(L, type, c_in) luaA_struct_push_typeid(L, luaA_type_id(type), c_in)

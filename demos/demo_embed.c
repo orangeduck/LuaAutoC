@@ -38,9 +38,9 @@ int main(int argc, char **argv) {
   luaL_openlibs(L);
   luaA_open();
   
-  luaA_struct_add(L, birdie);
-  luaA_struct_add_member(L, birdie, name, char*);
-  luaA_struct_add_member(L, birdie, num_wings, int);
+  luaA_struct(L, birdie);
+  luaA_struct_member(L, birdie, name, char*);
+  luaA_struct_member(L, birdie, num_wings, int);
   
   lua_pushcfunction(L, birdie_index);
   lua_setglobal(L, "birdie_index");

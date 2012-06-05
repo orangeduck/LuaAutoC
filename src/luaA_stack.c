@@ -14,25 +14,25 @@ void luaA_stack_open(void) {
   push_table = luaA_hashtable_new(256);
   to_table = luaA_hashtable_new(256);
   
-  luaA_stack_func(char, luaA_push_char, luaA_to_char);
-  luaA_stack_func(signed char, luaA_push_signed_char, luaA_to_signed_char);
-  luaA_stack_func(unsigned char, luaA_push_unsigned_char, luaA_to_unsigned_char);
-  luaA_stack_func(short, luaA_push_short, luaA_to_short);
-  luaA_stack_func(unsigned short, luaA_push_unsigned_short, luaA_to_unsigned_short);
-  luaA_stack_func(int, luaA_push_int, luaA_to_int);
-  luaA_stack_func(unsigned int, luaA_push_unsigned_int, luaA_to_unsigned_int);
-  luaA_stack_func(long, luaA_push_long, luaA_to_long);
-  luaA_stack_func(unsigned long, luaA_push_unsigned_long, luaA_to_unsigned_long);
-  luaA_stack_func(long long, luaA_push_long_long, luaA_to_long_long);
-  luaA_stack_func(unsigned long long, luaA_push_unsigned_long_long, luaA_to_unsigned_long_long);
-  luaA_stack_func(float, luaA_push_float, luaA_to_float);
-  luaA_stack_func(double, luaA_push_double, luaA_to_double);
-  luaA_stack_func(long double, luaA_push_long_double, luaA_to_long_double);
+  luaA_conversion(char, luaA_push_char, luaA_to_char);
+  luaA_conversion(signed char, luaA_push_signed_char, luaA_to_signed_char);
+  luaA_conversion(unsigned char, luaA_push_unsigned_char, luaA_to_unsigned_char);
+  luaA_conversion(short, luaA_push_short, luaA_to_short);
+  luaA_conversion(unsigned short, luaA_push_unsigned_short, luaA_to_unsigned_short);
+  luaA_conversion(int, luaA_push_int, luaA_to_int);
+  luaA_conversion(unsigned int, luaA_push_unsigned_int, luaA_to_unsigned_int);
+  luaA_conversion(long, luaA_push_long, luaA_to_long);
+  luaA_conversion(unsigned long, luaA_push_unsigned_long, luaA_to_unsigned_long);
+  luaA_conversion(long long, luaA_push_long_long, luaA_to_long_long);
+  luaA_conversion(unsigned long long, luaA_push_unsigned_long_long, luaA_to_unsigned_long_long);
+  luaA_conversion(float, luaA_push_float, luaA_to_float);
+  luaA_conversion(double, luaA_push_double, luaA_to_double);
+  luaA_conversion(long double, luaA_push_long_double, luaA_to_long_double);
   
-  luaA_stack_func(char*, luaA_push_char_ptr, luaA_to_char_ptr);
-  luaA_stack_func(const char*, luaA_push_const_char_ptr, luaA_to_const_char_ptr);
+  luaA_conversion(char*, luaA_push_char_ptr, luaA_to_char_ptr);
+  luaA_conversion(const char*, luaA_push_const_char_ptr, luaA_to_const_char_ptr);
   
-  luaA_stack_push_func(void, luaA_push_void);
+  luaA_conversion_push(void, luaA_push_void);
   
 }
 
@@ -50,7 +50,7 @@ int luaA_push_typeid(lua_State* L, luaA_Type type_id, void* c_in) {
     return push_func(L, c_in);
   }
   
-  if (luaA_struct_is_added_typeid(L, type_id)) {
+  if (luaA_struct_registered_typeid(L, type_id)) {
     return luaA_struct_push_typeid(L, type_id, c_in);
   }
   
@@ -66,7 +66,7 @@ void luaA_to_typeid(lua_State* L, luaA_Type type_id, void* c_out, int index) {
     return to_func(L, c_out, index);
   }
   
-  if (luaA_struct_is_added_typeid(L, type_id)) {
+  if (luaA_struct_registered_typeid(L, type_id)) {
     return luaA_struct_to_typeid(L, type_id, c_out, index);
   }
   
@@ -74,18 +74,18 @@ void luaA_to_typeid(lua_State* L, luaA_Type type_id, void* c_out, int index) {
   lua_error(L);  
 }
 
-void luaA_stack_func_typeid(luaA_Type type_id, luaA_Pushfunc push_func, luaA_Tofunc to_func) {
+void luaA_conversion_typeid(luaA_Type type_id, luaA_Pushfunc push_func, luaA_Tofunc to_func) {
   
   luaA_hashtable_set(push_table, luaA_type_name(type_id), push_func);
   luaA_hashtable_set(to_table, luaA_type_name(type_id), to_func);
   
 }
 
-void luaA_stack_push_func_typeid(luaA_Type type_id, luaA_Pushfunc func) {
+void luaA_conversion_push_typeid(luaA_Type type_id, luaA_Pushfunc func) {
   luaA_hashtable_set(push_table, luaA_type_name(type_id), func); 
 }
 
-void luaA_stack_pop_func_typeid(luaA_Type type_id, luaA_Tofunc func) {
+void luaA_conversion_to_typeid(luaA_Type type_id, luaA_Tofunc func) {
   luaA_hashtable_set(to_table, luaA_type_name(type_id), func);
 }
 
