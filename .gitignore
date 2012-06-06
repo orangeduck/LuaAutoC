@@ -5,4 +5,5 @@ demos/demo_convert
 demos/demo_embed
 demos/demo_func
 demos/demo_struct
+demos/demo_mod
 liblua_autoc.so

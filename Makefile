@@ -8,7 +8,8 @@ PLATFORM = $(shell uname)
 
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 	OUT= liblautoc.so
-	INCS= -I ./include -I/usr/include/lua52
+	SOUT= liblautoc.a
+	INCS= -I ./include -I/usr/include/lua5.2
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g -fPIC
 	LFLAGS= -llua5.2
 	DISTUTIL=
@@ -16,6 +17,7 @@ endif
 
 ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
 	OUT= lautoc.dll
+	SOUT= lautoc.lib
 	INCS= -I ./include -I./lua52/include
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g
 	LFLAGS= -g -L./lua52 -L./ -llua52 -lmingw32
@@ -28,7 +30,7 @@ dlibrary: $(OBJ_FILES)
 	$(CC) $(OBJ_FILES) $(LFLAGS) -shared -o $(OUT)
 
 slibrary: $(OBJ_FILES)
-	$(AR) rcs liblautoc.a $(OBJ_FILES)
+	$(AR) rcs $(SOUT) $(OBJ_FILES)
   
 demo_func: $(OBJ_FILES)
 	$(CC) demos/demo_func.c $(OBJ_FILES) $(CFLAGS) $(LFLAGS) -o demos/$@
