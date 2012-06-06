@@ -25,7 +25,8 @@ static int birdie_index(lua_State* L) {
 static int birdie_setindex(lua_State* L) {
   const char* membername = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
-  luaA_struct_to_member_name(L, birdie, self, membername, -1);
+  luaA_struct_to_member_name(L, membername, self, membername, -1);
+  //luaA_struct_to_member_name(L, birdie, self, membername, -1);
   return 0;
 }
 

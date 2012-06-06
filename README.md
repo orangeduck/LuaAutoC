@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_function_args2(L, add_numbers, float, int, float);
+  luaA_function(L, add_numbers, float, 2, int, float);
   
   lua_pushnumber(L, 6.13);
   lua_pushinteger(L, 5);
@@ -179,8 +179,8 @@ luaA_struct(sound);
 luaA_struct_member(sound, data, char*);
 luaA_struct_member(sound, length, int);
 
-luaA_function_args1(wav_load_file, sound*, char*);
-luaA_function_args1_void(sound_delete, void, sound*);
+luaA_function(wav_load_file, sound*, 1, char*);
+luaA_function_void(sound_delete, 1, sound*);
 ```
 
 Extended Usage 1
@@ -213,8 +213,8 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_function_args2(L, add_numbers, float, int, float);
-  luaA_function_args1_void(L, hello_world, void, char*);
+  luaA_function(L, add_numbers, float, 2, int, float);
+  luaA_function_void(L, hello_world, 1, char*);
   
   lua_pushcfunction(L, autocall);
   lua_setglobal(L, "autocall");
@@ -331,7 +331,7 @@ static void luaA_to_int_list(lau_State* L, void* c_out, int index) {
 
 luaA_conversion_to(int_list, luaA_pop_int_list);
 
-luaA_function_args2_void(print_int_list, void, int_list, int);
+luaA_function_void(print_int_list, 2, int_list, int);
 ```
 
 As you can probably see, automatic wrapping and type conversion becomes hard when memory management and pointers are involved. I'm looking at ways to improve this, perhaps with the ability to register 'before' and 'after' methods for certain functions or conversions.
@@ -349,20 +349,9 @@ FAQ
 
 * Does this work on Linux/Mac/Windows?
   
-  Should work fine on Linux. I imagine it will be simple to port to Mac but I don't have one to test on. It also compiles fine on Windows providing you use MinGW or Cygwin.
+  On Linux, yes. On Mac, probably but I don't have one to test on. On Windows, yes under MinGW or Cygwin. The binaries and headers will also link and compile under Visual Studio (in C++ mode).
   
-  I've done some experiments getting Lua AutoC to compile in Visual Studio and the port is fairly simple but there are a couple of annoying aspects. If someone is interested I'll be more than happy to share my developments but for now I would rather keep the code in the repo clean.
-  
-  To begin with there are two main options, either translate the source files into ANSI C or use the C++ compiler. Converting to ANSI C turned out to be too much of an effort and usage overall requires a C99 or C++ compiler anyway, to allow for some form of nested functions. Going with C++ appears to be the best way. Unfortunately this requires you rename all the Lua AutoC file extensions to .cpp. secondly Visual Studio disallows nested functions by default but there is a simple way around this by wrapping them in a struct/class and declaring them static. This means some more edits are required for the Function Registration Macros but again nothing huge. Contact me for more info.
-
-* Why are the function registration macros so verbose?
-  
-  Unfortunately this is unavoidable without writing complex assembly code. Just remember that the argument count must be specified in the name and also if the function returns void. All the macros in Lua AutoC throw readable errors (E.G on trying to register a struct member that does not exist, or use a type that does not exist), so don't worry to much about messing the system with a typo - in general it wont let you.
-
-```c
-luaA_function_args2(add_numbers, float, int, float);
-luaA_function_args3_void(add_numbers_message, void, char*, int, float);
-```
+  I've done some experiments getting Lua AutoC to _compile_ under Visual Studio and the port is fairly simple but there are a couple of annoying aspects. If someone is interested I'll be more than happy to share my developments but for now I would rather keep the code in the repo clean.
 
 * Is Lua AutoC slow?
   

@@ -2,9 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "luaA_hashtable.h"
-#include "luaA_stack.h"
-#include "luaA_call.h"
+#include "lautoc.h"
 
 #define MAX_ARG_NUM 10
 

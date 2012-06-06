@@ -2,10 +2,7 @@
 #include <string.h>
 
 #include "lua.h"
-#include "luaA_hashtable.h"
-#include "luaA_type.h"
-#include "luaA_stack.h"
-#include "luaA_struct.h"
+#include "lautoc.h"
 
 typedef struct {
   luaA_Type type;

@@ -2,9 +2,7 @@
 #include <string.h>
 
 #include "lua.h"
-#include "luaA_hashtable.h"
-#include "luaA_struct.h"
-#include "luaA_stack.h"
+#include "lautoc.h"
 
 static luaA_Hashtable* push_table;
 static luaA_Hashtable* to_table;

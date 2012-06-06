@@ -22,8 +22,8 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_function_args2(L, add_numbers, float, int, float);
-  luaA_function_args1_void(L, hello_world, void, char*);
+  luaA_function(L, add_numbers, float, 2, int, float);
+  luaA_function_void(L, hello_world, 1, char*);
   
   lua_pushcfunction(L, autocall);
   lua_setglobal(L, "autocall");

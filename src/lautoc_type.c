@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "luaA_type.h"
+#include "lautoc.h"
 
 typedef char* type_name;
 typedef int type_size;

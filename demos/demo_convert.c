@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
 	
-	luaA_conversion(pair, luaA_push_pair, luaA_to_pair);
+  luaA_conversion(pair, luaA_push_pair, luaA_to_pair);
 	
   luaA_struct(L, person_details);
   luaA_struct_member(L, person_details, first_name, char*);
@@ -62,5 +62,5 @@ int main(int argc, char **argv) {
   luaA_close();
   lua_close(L);
 	
-	return 0;
+  return 0;
 }

@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "luaA_hashtable.h"
+#include "lautoc.h"
 
 static int hash(const char* s, int size) {
   int h = 0;

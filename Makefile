@@ -1,4 +1,5 @@
 CC=gcc
+AR=ar
 
 C_FILES= $(wildcard src/*.c)
 OBJ_FILES= $(addprefix obj/,$(notdir $(C_FILES:.c=.o)))
@@ -21,11 +22,14 @@ ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
 	DISTUTIL= -c mingw32
 endif
 
-all: demo_func demo_struct demo_convert demo_mod demo_embed library
+all: demo_func demo_struct demo_convert demo_mod demo_embed dlibrary slibrary
 
-library: $(OBJ_FILES)
+dlibrary: $(OBJ_FILES)
 	$(CC) $(OBJ_FILES) $(LFLAGS) -shared -o $(OUT)
-	
+
+slibrary: $(OBJ_FILES)
+	$(AR) rcs liblautoc.a $(OBJ_FILES)
+  
 demo_func: $(OBJ_FILES)
 	$(CC) demos/demo_func.c $(OBJ_FILES) $(CFLAGS) $(LFLAGS) -o demos/$@
  

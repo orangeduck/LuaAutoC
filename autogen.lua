@@ -54,10 +54,11 @@ for k,v in pairs(funcdefs) do
     table.insert(argtypes, arginfo[1])
   end
   
-  local voidstring = ""
-  if typename == "void" then voidstring = "_void" end
-  
-  fstring = string.format("luaA_function_args%i%s(%s, %s", #argtypes, voidstring, name, typename)
+  if typename == "void" then
+    fstring = string.format("luaA_function_void(%s, %i", name, #argtypes)
+  else
+    fstring = string.format("luaA_function(%s, %s, %i", name, typename, #argtypes)
+  end
   for _, v in pairs(argtypes) do fstring = fstring .. string.format(", %s", v) end
   fstring = fstring .. ");"
   

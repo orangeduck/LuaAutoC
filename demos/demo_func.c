@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   luaA_open();
   
-  luaA_function_args2(L, add_numbers, float, int, float);
+  luaA_function(L, add_numbers, float, 2, int, float);
   
   lua_pushnumber(L, 6.13);
   lua_pushinteger(L, 5);
