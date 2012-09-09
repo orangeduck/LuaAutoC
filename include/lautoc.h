@@ -10,6 +10,7 @@
 #define lautoc_h
 
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "lua.h"
 
@@ -30,11 +31,11 @@ typedef int luaA_Type;
 
 #define luaA_type_id(type) luaA_type_add(#type, sizeof(type))
 
-luaA_Type luaA_type_add(char* type, int size);
+luaA_Type luaA_type_add(char* type, size_t size);
 luaA_Type luaA_type_find(char* type);
 
 char* luaA_type_name(luaA_Type id);
-int luaA_type_size(luaA_Type id);
+size_t luaA_type_size(luaA_Type id);
 
 
 /*
@@ -103,8 +104,6 @@ int luaA_push_void(lua_State* L, void* c_in);
 void luaA_struct_open(void);
 void luaA_struct_close(void);
 
-#define luaA_struct_offset(type, member) offsetof((type), (member))
-
 /* push and inspect struct members */
 #define luaA_struct_push_member(L, type, cstruct, member) luaA_struct_push_member_offset_typeid(L, luaA_type_id(type), cstruct, offsetof(type, member))
 #define luaA_struct_push_member_name(L, type, cstruct, member) luaA_struct_push_member_name_typeid(L, luaA_type_id(type), cstruct, member)
@@ -115,14 +114,14 @@ void luaA_struct_close(void);
 #define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
 #define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_typeid(L, luaA_type_id(type), member)
 
-int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, int offset);
+int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, size_t offset);
 int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type, void* cstruct, const char* member);
 
-void luaA_struct_to_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, int offset, int index);
+void luaA_struct_to_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, size_t offset, int index);
 void luaA_struct_to_member_name_typeid(lua_State* L, luaA_Type type, void* cstruct, const char* member, int index);
 
-int luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  int offset);
-int luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
+bool luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
+bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
 /* register structs */
 #define luaA_struct(L, type) luaA_struct_typeid(L, luaA_type_id(type))
@@ -131,9 +130,9 @@ int luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char
 #define luaA_struct_registered(L, type) luaA_struct_registered_typeid(L, luaA_type_id(type))
 
 void luaA_struct_typeid(lua_State* L, luaA_Type type);
-void luaA_struct_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, int offset);
+void luaA_struct_member_typeid(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, size_t offset);
 
-int luaA_struct_registered_typeid(lua_State* L, luaA_Type type);
+bool luaA_struct_registered_typeid(lua_State* L, luaA_Type type);
 
 /* push and inspect whole structs */
 #define luaA_struct_push(L, type, c_in) luaA_struct_push_typeid(L, luaA_type_id(type), c_in)
@@ -180,7 +179,7 @@ typedef struct {
 luaA_Hashtable* luaA_hashtable_new(int table_size);
 void luaA_hashtable_delete(luaA_Hashtable* ht);
 
-int luaA_hashtable_contains(luaA_Hashtable* ht, const char* string);
+bool luaA_hashtable_contains(luaA_Hashtable* ht, const char* string);
 void* luaA_hashtable_get(luaA_Hashtable* ht, const char* string);
 void luaA_hashtable_set(luaA_Hashtable* ht, const char* string, void* item);
 

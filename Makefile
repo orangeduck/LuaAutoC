@@ -7,7 +7,16 @@ OBJ_FILES= $(addprefix obj/,$(notdir $(C_FILES:.c=.o)))
 PLATFORM = $(shell uname)
 
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
-	OUT= liblautoc.so
+	DOUT= liblautoc.so
+	SOUT= liblautoc.a
+	INCS= -I ./include -I/usr/include/lua5.2
+	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g -fPIC
+	LFLAGS= -llua5.2
+	DISTUTIL=
+endif
+
+ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
+	DOUT= liblautoc.so
 	SOUT= liblautoc.a
 	INCS= -I ./include -I/usr/include/lua5.2
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g -fPIC
@@ -16,7 +25,7 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 endif
 
 ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
-	OUT= lautoc.dll
+	DOUT= lautoc.dll
 	SOUT= lautoc.lib
 	INCS= -I ./include -I./lua52/include
 	CFLAGS= $(INCS) -std=gnu99 -Wall -Werror -Wno-unused -O3 -g
@@ -24,13 +33,25 @@ ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
 	DISTUTIL= -c mingw32
 endif
 
-all: demo_func demo_struct demo_convert demo_mod demo_embed dlibrary slibrary
+# Library
 
-dlibrary: $(OBJ_FILES)
-	$(CC) $(OBJ_FILES) $(LFLAGS) -shared -o $(OUT)
+all: $(DOUT) $(SOUT)
 
-slibrary: $(OBJ_FILES)
+$(DOUT): $(OBJ_FILES)
+	$(CC) $(OBJ_FILES) $(LFLAGS) -shared -o $(DOUT)
+
+$(SOUT): $(OBJ_FILES)
 	$(AR) rcs $(SOUT) $(OBJ_FILES)
+  
+obj/%.o: src/%.c | obj
+	$(CC) $< -c $(CFLAGS) -o $@
+	
+obj:
+	mkdir obj
+  
+# Demos
+
+demos: demo_func demo_struct demo_convert demo_mod demo_embed
   
 demo_func: $(OBJ_FILES)
 	$(CC) demos/demo_func.c $(OBJ_FILES) $(CFLAGS) $(LFLAGS) -o demos/$@
@@ -47,11 +68,7 @@ demo_mod: $(OBJ_FILES)
 demo_embed: $(OBJ_FILES)
 	$(CC) demos/demo_embed.c $(OBJ_FILES) $(CFLAGS) $(LFLAGS) -o demos/$@
   
-obj/%.o: src/%.c | obj
-	$(CC) $< -c $(CFLAGS) -o $@
-	
-obj:
-	mkdir obj
+# Clean
 	
 clean:
 	rm $(OBJ_FILES)
