@@ -29,6 +29,17 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 	EXE_SUFFIX:=
 endif
 
+ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
+	LUA_INCLUDE_DIR?= -I/usr/include/lua5.2
+	LUA_LIBRARY?= -llua5.2
+	LAC_CFLAGS+= -fPIC
+	LAC_LDFLAGS+= -fPIC
+	SHARED_LIB_PREFIX:=lib
+	SHARED_LIB_SUFFIX:=.so
+	STATIC_LIB_PREFIX:=lib
+	STATIC_LIB_SUFFIX:=.a
+endif
+
 ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
 	LUA_INCLUDE_DIR?= -I./lua52/include
 	LUA_LIBRARY_DIR?= -L./lua52
@@ -42,7 +53,9 @@ ifeq ($(findstring MINGW,$(PLATFORM)),MINGW)
 	EXE_SUFFIX:=.exe
 endif
 
-all: $(DEMO_TARGETS) $(SHARED_LIB) $(STATIC_LIB)
+# Library
+
+all: $(SHARED_LIB) $(STATIC_LIB)
 
 $(SHARED_LIB): $(OBJ_FILES)
 	$(CC) $(LAC_LDFLAGS) $(LDFLAGS) -shared -o $@ $^ $(LAC_LIBS)
@@ -50,9 +63,6 @@ $(SHARED_LIB): $(OBJ_FILES)
 $(STATIC_LIB): $(OBJ_FILES)
 	$(AR) rcs $@ $^
   
-$(DEMO_TARGETS): demos/demo_%$(EXE_SUFFIX): obj/demo_%.o $(STATIC_LIB)
-	$(CC) $(LAC_LDFLAGS) $(LDFLAGS) -o $@ $^ $(LAC_LIBS)
- 
 obj/%.o: src/%.c | obj
 	$(CC) $(LAC_CPPFLAGS) $(LAC_CFLAGS) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
@@ -61,6 +71,15 @@ obj/%.o: demos/%.c | obj
 	
 obj:
 	mkdir obj
-	
+
+# Demos
+
+demos: $(DEMO_TARGETS)
+
+$(DEMO_TARGETS): demos/demo_%$(EXE_SUFFIX): obj/demo_%.o $(STATIC_LIB)
+	$(CC) $(LAC_LDFLAGS) $(LDFLAGS) -o $@ $^ $(LAC_LIBS)
+ 
+# Clean
+
 clean:
 	$(RM) $(OBJ_FILES) $(DEMO_TARGETS) $(SHARED_LIB) $(STATIC_LIB)

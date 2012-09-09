@@ -51,12 +51,12 @@ void luaA_hashtable_delete(luaA_Hashtable* ht) {
   free(ht);
 }
 
-int luaA_hashtable_contains(luaA_Hashtable* ht, const char* string) {
+bool luaA_hashtable_contains(luaA_Hashtable* ht, const char* string) {
 
   if (luaA_hashtable_get(ht, string) == NULL) {
-    return 0;
+    return false;
   } else {
-    return 1;
+    return true;
   }
 
 }

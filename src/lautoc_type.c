@@ -5,7 +5,7 @@
 #include "lautoc.h"
 
 typedef char* type_name;
-typedef int type_size;
+typedef size_t type_size;
 
 static type_name* type_names;
 static type_size* type_sizes;
@@ -29,7 +29,7 @@ void luaA_type_close(void) {
   free(type_sizes);
 }
 
-luaA_Type luaA_type_add(char* type, int size) {
+luaA_Type luaA_type_add(char* type, size_t size) {
   
   for(int i = 0; i < num_types; i++) {
     if (strcmp(type, type_names[i]) == 0) return i;
@@ -63,7 +63,7 @@ char* luaA_type_name(luaA_Type id) {
   return type_names[id];
 }
 
-int luaA_type_size(luaA_Type id) {
+size_t luaA_type_size(luaA_Type id) {
   if (id == -1) return -1;
   return type_sizes[id];
 }

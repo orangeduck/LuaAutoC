@@ -68,7 +68,7 @@ void luaA_to_typeid(lua_State* L, luaA_Type type_id, void* c_out, int index) {
     return luaA_struct_to_typeid(L, type_id, c_out, index);
   }
   
-  lua_pushfstring(L, "luaA_to: conversion from lua object from type '%s' not registered!", luaA_type_name(type_id));
+  lua_pushfstring(L, "luaA_to: conversion from lua object to type '%s' not registered!", luaA_type_name(type_id));
   lua_error(L);  
 }
 
