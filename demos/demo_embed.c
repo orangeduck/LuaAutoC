@@ -22,7 +22,7 @@ static int birdie_index(lua_State* L) {
   return luaA_struct_push_member_name(L, birdie, self, membername);
 }
 
-static int birdie_setindex(lua_State* L) {
+static int birdie_newindex(lua_State* L) {
   const char* membername = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
   luaA_struct_to_member_name(L, membername, self, membername, -1);
@@ -46,14 +46,14 @@ int main(int argc, char **argv) {
   lua_pushcfunction(L, birdie_index);
   lua_setglobal(L, "birdie_index");
   
-  lua_pushcfunction(L, birdie_setindex);
-  lua_setglobal(L, "birdie_setindex");
+  lua_pushcfunction(L, birdie_newindex);
+  lua_setglobal(L, "birdie_newindex");
   
   luaL_dostring(L, ""
     "Birdie = {}\n"
     "setmetatable(Birdie, Birdie)\n"
     "Birdie.__index = birdie_index\n"
-    "Birdie.__setindex = birdie_setindex\n"
+    "Birdie.__newindex = birdie_newindex\n"
     "function Birdie.__call()\n"
     "  local self = {}\n"
     "  setmetatable(self, Birdie)\n"
