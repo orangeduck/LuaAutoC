@@ -245,13 +245,13 @@ It also means that the job of wrapping is much easier - you can use strings and 
 Extended Usage 2
 ----------------
 
-Lua AutoC is perfect for automatically wrapping existing C Structs as Lua classes. By overriding `__index` and `__setindex` using a metatable we can easily make a Lua object that behaves as if it were a C struct.
+Lua AutoC is perfect for automatically wrapping existing C Structs as Lua classes. By overriding `__index` and `__newindex` using a metatable we can easily make a Lua object that behaves as if it were a C struct.
 
 ```lua
 Birdie = {}
 setmetatable(Birdie, Birdie)
 Birdie.__index = birdie_index
-Birdie.__setindex = birdie_setindex
+Birdie.__newindex = birdie_newindex
 function Birdie.__call()
   local self = {}
   setmetatable(self, Birdie)
@@ -263,7 +263,7 @@ print(bird.name)
 print(bird.num_wings)
 ```
 
-Where `birdie_index` and `birdie_setindex` are functions defined using the C API as shown below. Or alternatively developers can define the whole metatable in C and hide the `birdie_setindex` and `birdie_index` functions altogether.
+Where `birdie_index` and `birdie_newindex` are functions defined using the C API as shown below. Or alternatively developers can define the whole metatable in C and hide the `birdie_newindex` and `birdie_index` functions altogether.
 
 ```c
 typedef struct {
@@ -277,7 +277,7 @@ static int birdie_index(lua_State* L) {
   return luaA_struct_push_member_name(L, birdie, self, membername);
 }
 
-static int birdie_setindex(lua_State* L) {
+static int birdie_newindex(lua_State* L) {
   const char* membername = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
   luaA_struct_to_member_name(L, birdie, self, membername, -1);
@@ -291,8 +291,8 @@ luaA_struct_member(L, birdie, num_wings, int);
 lua_pushcfunction(L, birdie_index);
 lua_setglobal(L, "birdie_index");
 
-lua_pushcfunction(L, birdie_setindex);
-lua_setglobal(L, "birdie_setindex");
+lua_pushcfunction(L, birdie_newindex);
+lua_setglobal(L, "birdie_newindex");
 ```
 
 A lot less work than writing a bunch of getters and setters!
@@ -303,7 +303,7 @@ For fun why not try also making the lua metatable allocation and decallocation f
 
 The true power of Lua AutoC comes if you look a level deeper. If you use `luaA_struct_push_member_name_typeid` or `luaA_truct_to_member_name_typeid` you can even generalize the above code to work for arbritary structs/classes/types which can be added to.
 
-For this to work you need to get a `luaA_Type` value. This can be found by feeding a string into `luaA_type_find` which will lookup a string and see if a type has been registered with the same name. This means that if you give it a string of a previously registered data type E.G `"birdie"`, it will return a matching id. One trick I like it to use is to feed into it the name of the instance's class. This means that I can create a new Lua class with overwritten `__index` and `__setindex` it will automatically act like the corrisponding C struct with the same name.
+For this to work you need to get a `luaA_Type` value. This can be found by feeding a string into `luaA_type_find` which will lookup a string and see if a type has been registered with the same name. This means that if you give it a string of a previously registered data type E.G `"birdie"`, it will return a matching id. One trick I like it to use is to feed into it the name of the instance's class. This means that I can create a new Lua class with overwritten `__index` and `__newindex` it will automatically act like the corrisponding C struct with the same name.
 
 Managing Behaviour
 ------------------
