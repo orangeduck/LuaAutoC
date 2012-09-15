@@ -251,3 +251,12 @@ int luaA_push_void(lua_State* L,const void* c_in) {
   return 1;
 }
 
+luaA_Pushfunc luaA_type_push_func(luaA_Type id) {
+  if (id == -1) return NULL;
+  return luaA_hashtable_get(push_table, luaA_type_name(id));
+}
+
+luaA_Tofunc luaA_type_to_func(luaA_Type id) {
+  if (id == -1) return NULL;
+  return luaA_hashtable_get(to_table, luaA_type_name(id));
+}

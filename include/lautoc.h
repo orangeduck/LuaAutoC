@@ -30,6 +30,9 @@ void luaA_type_close(void);
 typedef int luaA_Type;
 #define LUAA_INVALID_TYPE -1
 
+typedef int (*luaA_Pushfunc)(lua_State*,const void*);
+typedef void (*luaA_Tofunc)(lua_State*, void*, int);
+
 #define luaA_type_id(type) luaA_type_add(#type, sizeof(type))
 
 luaA_Type luaA_type_add(char* type, size_t size);
@@ -37,6 +40,8 @@ luaA_Type luaA_type_find(const char* type);
 
 char* luaA_type_name(luaA_Type id);
 size_t luaA_type_size(luaA_Type id);
+luaA_Pushfunc luaA_type_push_func(luaA_Type id);
+luaA_Tofunc luaA_type_to_func(luaA_Type id);
 
 
 /*
@@ -50,9 +55,6 @@ void luaA_stack_close(void);
 
 int luaA_push_typeid(lua_State* L, luaA_Type type_id,const void* c_in);
 void luaA_to_typeid(lua_State* L, luaA_Type type_id, void* c_out, int index);
-
-typedef int (*luaA_Pushfunc)(lua_State*,const void*);
-typedef void (*luaA_Tofunc)(lua_State*, void*, int);
 
 #define luaA_conversion(type, push_func, to_func) luaA_conversion_typeid(luaA_type_id(type), push_func, to_func);
 #define luaA_conversion_push(type, func) luaA_conversion_push_typeid(luaA_type_id(type), func)
@@ -108,27 +110,28 @@ void luaA_struct_close(void);
 /* push and inspect struct members */
 #define luaA_struct_push_member(L, type, cstruct, member) luaA_struct_push_member_offset_typeid(L, luaA_type_id(type), cstruct, offsetof(type, member))
 #define luaA_struct_push_member_name(L, type, cstruct, member) luaA_struct_push_member_name_typeid(L, luaA_type_id(type), cstruct, member)
-
-#define luaA_struct_to_member(L, type, cstruct, member, index) luaA_struct_to_member_offset_typeid(L, luaA_type_id(type), cstruct, offsetof(type, member), index)
-#define luaA_struct_to_member_name(L, type, cstruct, member, index) luaA_struct_to_member_name_typeid(L, luaA_type_id(type), cstruct, member, index)
-
-#define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
-#define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_typeid(L, luaA_type_id(type), member)
-
-#define luaA_struct_next_member(L, type, member) luaA_struct_next_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
-#define luaA_struct_next_member_name(L, type, member) luaA_struct_next_member_name_typeid(L, luaA_type_id(type), member)
-
 int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type,const void* cstruct, size_t offset);
 int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type,const void* cstruct, const char* member);
 
+#define luaA_struct_to_member(L, type, cstruct, member, index) luaA_struct_to_member_offset_typeid(L, luaA_type_id(type), cstruct, offsetof(type, member), index)
+#define luaA_struct_to_member_name(L, type, cstruct, member, index) luaA_struct_to_member_name_typeid(L, luaA_type_id(type), cstruct, member, index)
 void luaA_struct_to_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, size_t offset, int index);
 void luaA_struct_to_member_name_typeid(lua_State* L, luaA_Type type, void* cstruct, const char* member, int index);
 
+#define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
+#define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_typeid(L, luaA_type_id(type), member)
 bool luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
 bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
+#define luaA_struct_next_member(L, type, member) luaA_struct_next_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
+#define luaA_struct_next_member_name(L, type, member) luaA_struct_next_member_name_typeid(L, luaA_type_id(type), member)
 const char* luaA_struct_next_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
 const char* luaA_struct_next_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
+
+#define luaA_struct_typeof_member(L, type, member) luaA_struct_typeof_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
+#define luaA_struct_typeof_member_name(L, type, member) luaA_struct_typeof_member_name_typeid(L, luaA_type_id(type), member)
+luaA_Type luaA_struct_typeof_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
+luaA_Type luaA_struct_typeof_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
 /* register structs */
 #define luaA_struct(L, type) luaA_struct_typeid(L, luaA_type_id(type))

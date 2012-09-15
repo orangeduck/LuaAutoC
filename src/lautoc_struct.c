@@ -199,6 +199,45 @@ const char* luaA_struct_next_member_name_typeid(lua_State* L, luaA_Type type, co
   return NULL;
 }
 
+luaA_Type luaA_struct_typeof_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset) {
+
+  struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
+  if (se != NULL) {
+    
+    for(int j = 0; j < se->num_members; j++) {
+    if (se->members[j]->offset == offset) {
+      struct_member_entry* sme = se->members[j];
+      return  sme->type;
+    }
+    }
+    
+    lua_pushfstring(L, "luaA_struct_typeof_member: Member offset '%i' not registered for struct '%s'!", offset, luaA_type_name(type));
+    return lua_error(L);  
+  }
+  
+  lua_pushfstring(L, "luaA_struct_typeof_member: Struct '%s' not registered!", luaA_type_name(type));
+  return lua_error(L);
+}
+
+luaA_Type luaA_struct_typeof_member_name_typeid(lua_State* L, luaA_Type type,  const char* member) {
+
+  struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
+  if (se != NULL) {
+    
+    for(int j = 0; j < se->num_members; j++) {
+    if (strcmp(se->members[j]->name, member) == 0) {
+      struct_member_entry* sme = se->members[j];
+      return  sme->type;
+    }
+    }
+    
+    lua_pushfstring(L, "luaA_struct_typeof_member_name: Member '%s' not registered for struct '%s'!", member, luaA_type_name(type));
+    return lua_error(L);  
+  }
+  
+  lua_pushfstring(L, "luaA_struct_typeof_member_name: Struct '%s' not registered!", luaA_type_name(type));
+  return lua_error(L);
+}
 void luaA_struct_typeid(lua_State* L, luaA_Type type) {
 
   struct_entry* se = malloc(sizeof(struct_entry));
