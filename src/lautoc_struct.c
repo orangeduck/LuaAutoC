@@ -42,7 +42,7 @@ void luaA_struct_close(void) {
 
 }
 
-int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, size_t offset) {
+int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type,const void* cstruct, size_t offset) {
 
   struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
   if (se != NULL) {
@@ -63,7 +63,7 @@ int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type, void* cs
   return 0;
 }
 
-int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type, void* cstruct, const char* member) {
+int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type,const void* cstruct, const char* member) {
 
   struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
   if (se != NULL) {
@@ -199,7 +199,7 @@ bool luaA_struct_registered_typeid(lua_State* L, luaA_Type type) {
 
 }
 
-int luaA_struct_push_typeid(lua_State* L, luaA_Type type, void* c_in) {
+int luaA_struct_push_typeid(lua_State* L, luaA_Type type,const void* c_in) {
 
   struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
   if (se != NULL) {

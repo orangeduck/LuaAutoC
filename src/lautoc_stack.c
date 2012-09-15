@@ -41,7 +41,7 @@ void luaA_stack_close(void) {
   
 }
 
-int luaA_push_typeid(lua_State* L, luaA_Type type_id, void* c_in) {
+int luaA_push_typeid(lua_State* L, luaA_Type type_id,const void* c_in) {
   
   luaA_Pushfunc push_func = luaA_hashtable_get(push_table, luaA_type_name(type_id));
   if (push_func != NULL) {
@@ -87,7 +87,7 @@ void luaA_conversion_to_typeid(luaA_Type type_id, luaA_Tofunc func) {
   luaA_hashtable_set(to_table, luaA_type_name(type_id), func);
 }
 
-int luaA_push_char(lua_State* L, void* c_in) {
+int luaA_push_char(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(char*)c_in);
   return 1;
 }
@@ -96,7 +96,7 @@ void luaA_to_char(lua_State* L, void* c_out, int index) {
   *(char*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_signed_char(lua_State* L, void* c_in) {
+int luaA_push_signed_char(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(signed char*)c_in);
   return 1;
 }
@@ -105,7 +105,7 @@ void luaA_to_signed_char(lua_State* L, void* c_out, int index) {
   *(signed char*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_unsigned_char(lua_State* L, void* c_in) {
+int luaA_push_unsigned_char(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(unsigned char*)c_in);
   return 1;
 }
@@ -114,7 +114,7 @@ void luaA_to_unsigned_char(lua_State* L, void* c_out, int index) {
   *(unsigned char*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_short(lua_State* L, void* c_in) {
+int luaA_push_short(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(short*)c_in);
   return 1;
 }
@@ -123,7 +123,7 @@ void luaA_to_short(lua_State* L, void* c_out, int index) {
   *(short*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_unsigned_short(lua_State* L, void* c_in) {
+int luaA_push_unsigned_short(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(unsigned short*)c_in);
   return 1;
 }
@@ -132,7 +132,7 @@ void luaA_to_unsigned_short(lua_State* L, void* c_out, int index) {
   *(unsigned short*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_int(lua_State* L, void* c_in) {
+int luaA_push_int(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(int*)c_in);
   return 1;
 }
@@ -141,7 +141,7 @@ void luaA_to_int(lua_State* L, void* c_out, int index) {
   *(int*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_unsigned_int(lua_State* L, void* c_in) {
+int luaA_push_unsigned_int(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(unsigned int*)c_in);
   return 1;
 }
@@ -150,7 +150,7 @@ void luaA_to_unsigned_int(lua_State* L, void* c_out, int index) {
   *(unsigned int*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_long(lua_State* L, void* c_in) {
+int luaA_push_long(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(long*)c_in);
   return 1;
 }
@@ -159,7 +159,7 @@ void luaA_to_long(lua_State* L, void* c_out, int index) {
   *(long*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_unsigned_long(lua_State* L, void* c_in) {
+int luaA_push_unsigned_long(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(unsigned long*)c_in);
   return 1;
 }
@@ -168,7 +168,7 @@ void luaA_to_unsigned_long(lua_State* L, void* c_out, int index) {
   *(unsigned long*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_long_long(lua_State* L, void* c_in) {
+int luaA_push_long_long(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(long long*)c_in);
   return 1;
 }
@@ -177,7 +177,7 @@ void luaA_to_long_long(lua_State* L, void* c_out, int index) {
   *(long long*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_unsigned_long_long(lua_State* L, void* c_in) {
+int luaA_push_unsigned_long_long(lua_State* L,const void* c_in) {
   lua_pushinteger(L, *(unsigned long long*)c_in);
   return 1;
 }
@@ -186,7 +186,7 @@ void luaA_to_unsigned_long_long(lua_State* L, void* c_out, int index) {
   *(unsigned long long*)c_out = lua_tointeger(L, index);
 }
 
-int luaA_push_float(lua_State* L, void* c_in) {
+int luaA_push_float(lua_State* L,const void* c_in) {
   lua_pushnumber(L, *(float*)c_in);
   return 1;
 }
@@ -195,7 +195,7 @@ void luaA_to_float(lua_State* L, void* c_out, int index) {
   *(float*)c_out = lua_tonumber(L, index);
 }
 
-int luaA_push_double(lua_State* L, void* c_in) {
+int luaA_push_double(lua_State* L,const void* c_in) {
   lua_pushnumber(L, *(double*)c_in);
   return 1;
 }
@@ -204,7 +204,7 @@ void luaA_to_double(lua_State* L, void* c_out, int index) {
   *(double*)c_out = lua_tonumber(L, index);
 }
 
-int luaA_push_long_double(lua_State* L, void* c_in) {
+int luaA_push_long_double(lua_State* L,const void* c_in) {
   lua_pushnumber(L, *(long double*)c_in);
   return 1;
 }
@@ -213,7 +213,7 @@ void luaA_to_long_double(lua_State* L, void* c_out, int index) {
   *(long double*)c_out = lua_tonumber(L, index);
 }
 
-int luaA_push_char_ptr(lua_State* L, void* c_in) {
+int luaA_push_char_ptr(lua_State* L,const void* c_in) {
   lua_pushstring(L, *(char**)c_in);
   return 1;
 }
@@ -222,7 +222,7 @@ void luaA_to_char_ptr(lua_State* L, void* c_out, int index) {
   *(char**)c_out = (char*)lua_tostring(L, index);
 }
 
-int luaA_push_const_char_ptr(lua_State* L, void* c_in) {
+int luaA_push_const_char_ptr(lua_State* L,const void* c_in) {
   lua_pushstring(L, *(const char**)c_in);
   return 1;
 }
@@ -231,7 +231,7 @@ void luaA_to_const_char_ptr(lua_State* L, void* c_out, int index) {
   *(const char**)c_out = lua_tostring(L, index);
 }
 
-int luaA_push_void(lua_State* L, void* c_in) {
+int luaA_push_void(lua_State* L,const void* c_in) {
   lua_pushnil(L);
   return 1;
 }
