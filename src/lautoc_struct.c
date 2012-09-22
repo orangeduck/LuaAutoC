@@ -154,26 +154,6 @@ bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type, const char
   return false;
 }
 
-const char* luaA_struct_next_member_offset_typeid(lua_State* L, luaA_Type type, size_t offset) {
-
-  struct_entry* se = luaA_hashtable_get(struct_table, luaA_type_name(type));
-  if (se != NULL) {
-    for(int j = 0; j < se->num_members; j++) {
-      if (se->members[j]->offset == offset) { 
-	j++;
-	if(j == se->num_members) return NULL;
-	return se->members[j]->name;
-      }
-    }
-    lua_pushfstring(L, "luaA_struct_to_member: Member offset '%i' not registered for struct '%s'!", offset, luaA_type_name(type));
-    lua_error(L);  
-    return NULL;
-  }
-  
-  lua_pushfstring(L, "lua_autostruct: Struct '%s' not registered!", luaA_type_name(type));
-  lua_error(L);
-  return NULL;
-}
 
 const char* luaA_struct_next_member_name_typeid(lua_State* L, luaA_Type type, const char* member) {
 

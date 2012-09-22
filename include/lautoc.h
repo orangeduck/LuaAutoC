@@ -123,9 +123,8 @@ void luaA_struct_to_member_name_typeid(lua_State* L, luaA_Type type, void* cstru
 bool luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
 bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
-#define luaA_struct_next_member(L, type, member) luaA_struct_next_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
+#define LUAA_INVALID_MEMBER_NAME NULL
 #define luaA_struct_next_member_name(L, type, member) luaA_struct_next_member_name_typeid(L, luaA_type_id(type), member)
-const char* luaA_struct_next_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
 const char* luaA_struct_next_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
 
 #define luaA_struct_typeof_member(L, type, member) luaA_struct_typeof_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
