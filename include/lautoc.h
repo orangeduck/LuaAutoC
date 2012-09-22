@@ -40,8 +40,8 @@ luaA_Type luaA_type_find(const char* type);
 
 char* luaA_type_name(luaA_Type id);
 size_t luaA_type_size(luaA_Type id);
-int luaA_type_has_push_func(luaA_Type id);
-int luaA_type_has_to_func(luaA_Type id);
+bool luaA_type_has_push_func(luaA_Type id);
+bool luaA_type_has_to_func(luaA_Type id);
 
 
 /*
