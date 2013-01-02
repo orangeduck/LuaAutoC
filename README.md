@@ -329,7 +329,7 @@ static void luaA_to_int_list(lau_State* L, void* c_out, int index) {
   *(int_list*)c_out = list_space;
 }
 
-luaA_conversion_to(int_list, luaA_pop_int_list);
+luaA_conversion_to(int_list, luaA_to_int_list);
 
 luaA_function_void(print_int_list, 2, int_list, int);
 ```

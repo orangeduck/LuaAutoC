@@ -32,10 +32,10 @@ typedef int luaA_Type;
 
 #define luaA_type_id(type) luaA_type_add(#type, sizeof(type))
 
-luaA_Type luaA_type_add(char* type, size_t size);
+luaA_Type luaA_type_add(const char* type, size_t size);
 luaA_Type luaA_type_find(const char* type);
 
-char* luaA_type_name(luaA_Type id);
+const char* luaA_type_name(luaA_Type id);
 size_t luaA_type_size(luaA_Type id);
 
 
@@ -115,14 +115,14 @@ void luaA_struct_close(void);
 #define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_typeid(L, luaA_type_id(type), offsetof(type, member))
 #define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_typeid(L, luaA_type_id(type), member)
 
-int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type,const void* cstruct, size_t offset);
-int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type,const void* cstruct, const char* member);
+int luaA_struct_push_member_offset_typeid(lua_State* L, luaA_Type type, const void* cstruct, size_t offset);
+int luaA_struct_push_member_name_typeid(lua_State* L, luaA_Type type, const void* cstruct, const char* member);
 
 void luaA_struct_to_member_offset_typeid(lua_State* L, luaA_Type type, void* cstruct, size_t offset, int index);
 void luaA_struct_to_member_name_typeid(lua_State* L, luaA_Type type, void* cstruct, const char* member, int index);
 
-bool luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type,  size_t offset);
-bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type,  const char* member);
+bool luaA_struct_has_member_offset_typeid(lua_State* L, luaA_Type type, size_t offset);
+bool luaA_struct_has_member_name_typeid(lua_State* L, luaA_Type type, const char* member);
 
 /* register structs */
 #define luaA_struct(L, type) luaA_struct_typeid(L, luaA_type_id(type))
@@ -159,7 +159,7 @@ int luaA_call_name(lua_State* L, const char* func_name);
 
 typedef void (*luaA_Func)(void*,void*);
 
-void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, char* name, luaA_Type ret_tid, int num_args, ...);
+void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, const char* name, luaA_Type ret_tid, int num_args, ...);
 
 
 /*
