@@ -1,7 +1,7 @@
 Lua AutoC
 =========
 
-Version 0.8
+Version 0.85
 
 Introduction
 ------------
@@ -115,14 +115,14 @@ typedef struct {
   int x, y;
 } pair;
 
-static int luaA_push_pair(lua_State* L, void* c_in) {
+static int luaA_push_pair(lua_State* L, luaA_Type t, const void* c_in) {
   pair p = *(pair*)c_in;
   lua_pushinteger(L, p.x);
   lua_pushinteger(L, p.y);
   return 2;
 }
 
-static void luaA_to_pair(lua_State* L, void* c_out, int index) {
+static void luaA_to_pair(lua_State* L, luaA_Type t, void* c_out, int index) {
   pair* p = (pair*)c_out;
   p->y = lua_tointeger(L, index);
   p->x = lua_tointeger(L, index-1);
@@ -320,7 +320,7 @@ static void print_int_list(int* list, int num_ints) {
 typedef int* int_list;
 
 static int list_space[512];
-static void luaA_to_int_list(lau_State* L, void* c_out, int index) {
+static void luaA_to_int_list(lau_State* L, luaA_Type t, void* c_out, int index) {
   for(int i = 1; i <= luaL_getn(L, index); i++) {
     lua_pushinteger(L, i);
     lua_gettable(L, index-1);
@@ -334,7 +334,7 @@ luaA_conversion_to(int_list, luaA_to_int_list);
 luaA_function_void(print_int_list, 2, int_list, int);
 ```
 
-As you can probably see, automatic wrapping and type conversion becomes hard when memory management and pointers are involved. I'm looking at ways to improve this, perhaps with the ability to register 'before' and 'after' methods for certain functions or conversions.
+As you can probably see, automatic wrapping and type conversion becomes hard when memory management and pointers are involved.
 
 FAQ
 ---
