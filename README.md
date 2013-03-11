@@ -339,7 +339,7 @@ As you can probably see, automatic wrapping and type conversion becomes hard whe
 Using Enums
 ------------
 
-Enums are transformed into strings. To handle enums you need to first register them, then register the different values as mapping from string to the appropriate value. For each string you can declare independently if it is case-sensitive or not. You can also register multiple strings for a single enum value. Any matching lua string will be transformed into the union value, but the first correct value will be used when tranforming from C to lua
+Enums are transformed into strings. To handle enums you need to first register them, then register the different values as mapping from string to the appropriate value. For each string you can declare independently if it is case-sensitive or not. You can also register multiple strings for a single enum value. Any matching lua string will be transformed into the enum value, but the first correct value will be used when tranforming from C to lua
 ```c
 #include <stdio.h>
 
