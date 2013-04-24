@@ -19,7 +19,14 @@ function findall(text, pattern)
   end
   return matches
 end
-  
+
+function string:split(sep)
+  local sep, fields = sep or ":", {}
+  local pattern = string.format("([^%s]+)", sep)
+  self:gsub(pattern, function(c) fields[#fields+1] = c end)
+  return fields
+end
+
 typedefs = findall(text, "typedef struct {.-} %w-;")
 funcdefs = findall(text, "[%w%*]- [%w_]-%(.-%);")
 
@@ -28,13 +35,6 @@ print("")
 for k,v in pairs(typedefs) do
   local _, _, members, typename = string.find(v, "typedef struct {(.-)} (%w-);")
   print(string.format("luaA_struct(%s);", typename))
-  
-  function string:split(sep)
-    local sep, fields = sep or ":", {}
-    local pattern = string.format("([^%s]+)", sep)
-    self:gsub(pattern, function(c) fields[#fields+1] = c end)
-    return fields
-  end
   
   for _, mem in pairs(members:split(";")) do
     local meminfo = mem:split(" ")
