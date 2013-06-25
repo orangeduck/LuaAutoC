@@ -1,3 +1,4 @@
+#!/usr/bin/env lua
 -- Autogeneration Script for lua_autoc headers.
 -- Expect that results will need cleaning up. It isn't very accurate.
 
