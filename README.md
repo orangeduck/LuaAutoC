@@ -348,9 +348,9 @@ Enums are transformed into string - value mappings. To handle enums you need to 
 #include "lautoc.h"
 
 typedef enum {
-	case_sensitive,
-	case_insensitive,
-	not_contiguous = 45,
+  case_sensitive,
+  case_insensitive,
+  not_contiguous = 45,
 } enum_val;
 
 int main(int argc, char **argv) {
@@ -369,7 +369,7 @@ int main(int argc, char **argv) {
   printf("not_contiguous pushed as %s\n", lua_tostring(L,-1));
 
   lua_pushstring(L, "alias_sensitive");
-  luaA_to(L, enum_val, &test_enum);
+  luaA_to(L, enum_val, &test_enum, -1);
   printf("alias_sensitive read back as %d\n", test_enum); 
 
   luaA_close();
@@ -377,6 +377,7 @@ int main(int argc, char **argv) {
 	
   return 0;
 }
+
 ```
 
 FAQ
