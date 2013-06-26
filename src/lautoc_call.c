@@ -112,10 +112,16 @@ static int luaA_call_entry(lua_State* L, func_entry* fe) {
   return count;
 }
 
+static void luaA_ptr_string(void* func_ptr, char* out) {
+  memcpy(out, "*", 1);
+  memcpy(out + 1, func_ptr, sizeof(void*));
+  memcpy(out + 1 + sizeof(void*), "\0", 1);
+}
+
 int luaA_call(lua_State* L, void* func_ptr) {
   
-  char ptr_string[128];
-  sprintf(ptr_string, "%p", func_ptr);
+  char ptr_string[sizeof(void*) + 2];
+  luaA_ptr_string(func_ptr, ptr_string);
   
   func_entry* fe = luaA_hashtable_get(func_ptr_table, ptr_string);
   if (fe != NULL) {
@@ -148,7 +154,7 @@ void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, con
   
   func_entry* fe = malloc(sizeof(func_entry));
   
-  fe->name = malloc(strlen(name) + 1);
+  fe->name = strdup(strlen(name) + 1);
   strcpy(fe->name, name);
   
   fe->src_func = src_func;
@@ -157,14 +163,15 @@ void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, con
   fe->ret_type = ret_t;
   fe->num_args = num_args;
   
-  va_list argl;
-  va_start(argl, num_args);
+  va_list va;
+  va_start(va, num_args);
   for(int i = 0; i < num_args; i++) {
-    fe->arg_types[i] = va_arg(argl, luaA_Type);
+    fe->arg_types[i] = va_arg(va, luaA_Type);
   }
+  va_end(va);
   
-  char ptr_string[128];
-  sprintf(ptr_string, "%p", src_func);
+  char ptr_string[sizeof(void*) + 2];
+  luaA_ptr_string(src_func, ptr_string);
   
   luaA_hashtable_set(func_name_table, name, fe);
   luaA_hashtable_set(func_ptr_table, ptr_string, fe);
