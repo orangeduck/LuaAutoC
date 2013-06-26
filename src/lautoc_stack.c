@@ -9,8 +9,8 @@ static luaA_Hashtable* to_table;
 
 void luaA_stack_open(void) {
   
-  push_table = luaA_hashtable_new(256);
-  to_table = luaA_hashtable_new(256);
+  push_table = luaA_hashtable_new(257);
+  to_table = luaA_hashtable_new(257);
   
   luaA_conversion(char, luaA_push_char, luaA_to_char);
   luaA_conversion(signed char, luaA_push_signed_char, luaA_to_signed_char);

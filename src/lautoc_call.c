@@ -4,7 +4,9 @@
 
 #include "lautoc.h"
 
-#define MAX_ARG_NUM 10
+enum {
+  MAX_ARG_NUM = 10,
+};
 
 typedef struct {
   char* name;
@@ -19,8 +21,8 @@ static luaA_Hashtable* func_ptr_table;
 static luaA_Hashtable* func_name_table;
 
 void luaA_call_open(void) {
-  func_ptr_table = luaA_hashtable_new(1024);
-  func_name_table = luaA_hashtable_new(1024);
+  func_ptr_table = luaA_hashtable_new(1021);
+  func_name_table = luaA_hashtable_new(1021);
 }
 
 static void func_entry_delete(func_entry* fe) {
@@ -35,8 +37,10 @@ void luaA_call_close(void) {
   luaA_hashtable_delete(func_name_table);
 }
 
-#define RET_STACK_SIZE 128
-#define ARG_STACK_SIZE 1024
+enum {
+  RET_STACK_SIZE = 128,
+  ARG_STACK_SIZE = 1024,
+};
 
 static char ret_stack[RET_STACK_SIZE];
 static void* ret_stack_ptr = ret_stack;
