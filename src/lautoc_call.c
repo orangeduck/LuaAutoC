@@ -71,16 +71,16 @@ static int luaA_call_entry(lua_State* L, func_entry* fe) {
   int ret_data_size = luaA_type_size(fe->ret_type);
   int arg_data_size = total_arg_size(fe);
   
-  int ret_using_heap = 0; int arg_using_heap = 0;
+  bool ret_using_heap = false; bool arg_using_heap = false;
   void* ret_data = ret_stack_ptr;
   void* arg_data = arg_stack_ptr;
   
   if (ret_data_size > ret_stack_space()) {
-    ret_using_heap = 1; ret_data = malloc(ret_data_size);
+    ret_using_heap = true; ret_data = malloc(ret_data_size);
   }
   
   if (arg_data_size > arg_stack_space()) {
-    arg_using_heap = 1; arg_data = malloc(arg_data_size);
+    arg_using_heap = true; arg_data = malloc(arg_data_size);
   }
   
   /* Pop args in reverse order but place in memory in forward order */
@@ -145,7 +145,7 @@ int luaA_call_name(lua_State* L, const char* func_name) {
   return 0;
 }
 
-void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, const char* name, luaA_Type ret_t, int num_args, ...) {
+void luaA_function_reg_typeid(lua_State* L, void* src_func, luaA_Func auto_func, const char* name, luaA_Type ret_t, int num_args, ...) {
 
   if (num_args >= MAX_ARG_NUM) {
     lua_pushfstring(L, "luaA_func_add: Function has %i arguments - maximum supported is %i!", num_args, MAX_ARG_NUM);
@@ -154,7 +154,7 @@ void luaA_function_typeid(lua_State* L, void* src_func, luaA_Func auto_func, con
   
   func_entry* fe = malloc(sizeof(func_entry));
   
-  fe->name = strdup(strlen(name) + 1);
+  fe->name = malloc(strlen(name) + 1);
   strcpy(fe->name, name);
   
   fe->src_func = src_func;
