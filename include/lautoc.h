@@ -201,11 +201,12 @@ int luaA_call_name(lua_State* L, const char* func_name);
 typedef void (*luaA_Func)(void*, void*);
 
 #define luaA_function_reg(L, func, ret_t, num_args, ...) __VA_ARGS_APPLY__(luaA_function_reg_args##num_args##_macro, L, func, ret_t, ##__VA_ARGS__ )
+#define luaA_function_reg_void(L, func, num_args, ...) __VA_ARGS_APPLY__(luaA_function_reg_args##num_args##_macro, L, func, void, ##__VA_ARGS__ )
 void luaA_function_reg_typeid(lua_State* L, void* src_func, luaA_Func auto_func, const char* name, luaA_Type ret_tid, int num_args, ...);
 
 /* declare & register */
 #define luaA_function(L, func, ret_t, num_args, ...) luaA_function_decl(func, ret_t, num_args, ##__VA_ARGS__); luaA_function_reg(L, func, ret_t, num_args, ##__VA_ARGS__)
-#define luaA_function_void(L, func, num_args, ...) luaA_function_decl_void(func, num_args, ##__VA_ARGS__); luaA_function_reg(L, func, void, num_args, ##__VA_ARGS__)
+#define luaA_function_void(L, func, num_args, ...) luaA_function_decl_void(func, num_args, ##__VA_ARGS__); luaA_function_reg_void(L, func, num_args, ##__VA_ARGS__)
 
 
 /*
