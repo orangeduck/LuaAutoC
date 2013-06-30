@@ -395,7 +395,7 @@ FAQ
 
 * Can this work with C99?
   
-  By standard Lua AutoC makes uses of nested functions which are a GNU99 specific thing. These are not strictly required and as such Lua AutoC can be compiled to C99 standard. To do this functions but be "declared" outside of the program, and then "registered" in the runtime. This basically just means having to use `luaA_function` twice. See `demo_c99.c` for a clear example.
+  By standard Lua AutoC makes uses of nested functions which are a GNU99 specific thing. These are not strictly required and as such Lua AutoC can be compiled to C99 standard. To do this functions must be "declared" outside of the program, and then "registered" in the runtime. This basically just means having to use `luaA_function` twice. See `demo_c99.c` for a clear example.
   
 * Is Lua AutoC slow?
   
