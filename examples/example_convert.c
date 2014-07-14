@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "lautoc.h"
+#include "../lautoc.h"
 
 typedef struct {
   int x, y;
@@ -31,15 +26,17 @@ typedef struct {
 int main(int argc, char **argv) {
 	
   lua_State* L = luaL_newstate();
-  luaA_open();
+  luaA_open(L);
 	
-  luaA_conversion(pair, luaA_push_pair, luaA_to_pair);
+  luaA_conversion(L, pair, luaA_push_pair, luaA_to_pair);
 	
   luaA_struct(L, person_details);
   luaA_struct_member(L, person_details, id, int);
   luaA_struct_member(L, person_details, male, char);
   luaA_struct_member(L, person_details, coolness, float);
-
+  
+  printf("Stack: %i\n", lua_gettop(L));
+  
   pair p = {1, 2};
   person_details my_details = {0, 1, 125212.213};
   
@@ -59,7 +56,7 @@ int main(int argc, char **argv) {
   
   lua_pop(L, 1);
   
-  luaA_close();
+  luaA_close(L);
   lua_close(L);
 	
   return 0;

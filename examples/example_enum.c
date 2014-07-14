@@ -1,8 +1,4 @@
-#include <stdio.h>
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "lautoc.h"
+#include "../lautoc.h"
 
 typedef enum {
 	case_sensitive,
@@ -13,7 +9,7 @@ typedef enum {
 int main(int argc, char **argv) {
 	
   lua_State* L = luaL_newstate();
-  luaA_open();
+  luaA_open(L);
 	
   luaA_enum(L, enum_val);
   luaA_enum_value(L, enum_val, case_sensitive, true);
@@ -29,7 +25,7 @@ int main(int argc, char **argv) {
   luaA_to(L, enum_val, &test_enum, -1);
   printf("alias_sensitive read back as %d\n", test_enum); 
 
-  luaA_close();
+  luaA_close(L);
   lua_close(L);
 	
   return 0;

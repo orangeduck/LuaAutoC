@@ -1,8 +1,4 @@
-#include <stdio.h>
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "lautoc.h"
+#include "../lautoc.h"
 
 typedef struct {
   float x, y, z;
@@ -11,8 +7,8 @@ typedef struct {
 int main(int argc, char **argv) {
 	
   lua_State* L = luaL_newstate();
-  luaA_open();
-	
+  
+  luaA_open(L);
   luaA_struct(L, vector3);
   luaA_struct_member(L, vector3, x, float);
   luaA_struct_member(L, vector3, y, float);
@@ -22,11 +18,11 @@ int main(int argc, char **argv) {
   
   luaA_struct_push_member(L, vector3, &position, y);
   
-  printf("Y: %f\n", lua_tonumber(L, -1));
+  printf("y: %f\n", lua_tonumber(L, -1));
   
   lua_pop(L, 1);
   
-  luaA_close();
+  luaA_close(L);
   lua_close(L);
 	
   return 0;

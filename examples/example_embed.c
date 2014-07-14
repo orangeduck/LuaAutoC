@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-#include "lautoc.h"
+#include "../lautoc.h"
 
 typedef struct {
   char* name;
@@ -36,7 +30,7 @@ int main(int argc, char **argv) {
   
   lua_State* L = luaL_newstate();
   luaL_openlibs(L);
-  luaA_open();
+  luaA_open(L);
   
   luaA_struct(L, birdie);
   luaA_struct_member(L, birdie, name, char*);
@@ -65,7 +59,7 @@ int main(int argc, char **argv) {
     "\n"
     );
   
-  luaA_close();
+  luaA_close(L);
   lua_close(L);
   
   return 0;
