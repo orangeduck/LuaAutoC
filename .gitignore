@@ -5,12 +5,12 @@
 
 /lib*.a
 /lib*.so
-/demos/demo_convert
-/demos/demo_embed
-/demos/demo_func
-/demos/demo_struct
-/demos/demo_mod
+/examples/examples_convert
+/examples/examples_embed
+/examples/examples_func
+/examples/examples_struct
+/examples/examples_mod
 
 /*.lib
 /*.dll
-/demos/*.exe
+/examples/*.exe

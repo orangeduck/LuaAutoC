@@ -13,8 +13,8 @@ int main(int argc, char **argv) {
   luaA_open(L);
   luaA_function_register(L, add_numbers, float, int, float);
   
-  lua_pushnumber(L, 6.13);
   lua_pushinteger(L, 5);
+  lua_pushnumber(L, 6.13);
   luaA_call(L, add_numbers);
   
   printf("Result: %f\n", lua_tonumber(L, -1));

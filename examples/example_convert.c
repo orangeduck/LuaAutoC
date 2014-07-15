@@ -35,23 +35,18 @@ int main(int argc, char **argv) {
   luaA_struct_member(L, person_details, male, char);
   luaA_struct_member(L, person_details, coolness, float);
   
-  printf("Stack: %i\n", lua_gettop(L));
-  
   pair p = {1, 2};
   person_details my_details = {0, 1, 125212.213};
   
   luaA_push(L, pair, &p);
-  printf("Pair: (%s, %s)\n", lua_tostring(L, -2), lua_tostring(L, -1));
   lua_pop(L, 2);
-  
+
   luaA_push(L, person_details, &my_details);
   
   lua_getfield(L, -1, "id");
-  printf("Id: %i\n", (int)lua_tointeger(L, -1));
   lua_pop(L, 1);
   
   lua_getfield(L, -1, "male");
-  printf("Male: %s\n", (bool)lua_toboolean(L, -1) ? "true" : "false");
   lua_pop(L, 1);
   
   lua_pop(L, 1);

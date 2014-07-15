@@ -16,12 +16,6 @@ int main(int argc, char **argv) {
   
   vector3 position = {1.0f, 2.11f, 3.16f};
   
-  luaA_struct_push_member(L, vector3, &position, y);
-  
-  printf("y: %f\n", lua_tonumber(L, -1));
-  
-  lua_pop(L, 1);
-  
   luaA_close(L);
   lua_close(L);
 	

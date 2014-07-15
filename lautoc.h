@@ -1,5 +1,5 @@
 /*
-** LuaAutoC - Automagically Use C Functions and Structs with the Lua API
+** LuaAutoC - Automagically use C Functions and Structs with the Lua API
 ** https://github.com/orangeduck/LuaAutoC
 ** Daniel Holden - contact@theorangeduck.com
 ** Licensed under BSD
@@ -122,14 +122,12 @@ void luaA_to_void_ptr(lua_State* L, luaA_Type,  void* c_out, int index);
 #define luaA_struct_push_member(L, type, cstruct, member) luaA_struct_push_member_offset_type(L, luaA_type(L, type), cstruct, offsetof(type, member))
 #define luaA_struct_push_member_name(L, type, cstruct, member) luaA_struct_push_member_name_type(L, luaA_type(L, type), cstruct, member)
 
-#define luaA_struct_to(L, type, c_out, index) luaA_struct_to_type(L, luaA_type(L, type), pyobj, c_out, index)
-#define luaA_struct_to_member(L, type, cstruct, member, index) luaA_struct_to_member_offset_typ(L, luaA_type(L, type), cstruct, offsetof(type, member), index)
+#define luaA_struct_to(L, type, c_out, index) luaA_struct_to_type(L, luaA_type(L, type), c_out, index)
+#define luaA_struct_to_member(L, type, cstruct, member, index) luaA_struct_to_member_offset_type(L, luaA_type(L, type), cstruct, offsetof(type, member), index)
 #define luaA_struct_to_member_name(L, type, cstruct, member, index) luaA_struct_to_member_name_type(L, luaA_type(L, type), cstruct, member, index)
 
 #define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_type(L, luaA_type(L, type), offsetof(type, member))
 #define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_type(L, luaA_type(L, type), member)
-
-#define luaA_struct_next_member_name(L, type, member) luaA_struct_next_member_name_type(L, luaA_type(L, type), member)
 
 #define luaA_struct_typeof_member(L, type, member) luaA_struct_typeof_member_offset_type(L, luaA_type(L, type), offsetof(type, member))
 #define luaA_struct_typeof_member_name(L, type, member) luaA_struct_typeof_member_name_type(L, luaA_type(L, type), member)
@@ -150,8 +148,6 @@ void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, void* cstruct
 bool luaA_struct_has_member_offset_type(lua_State* L, luaA_Type type, size_t offset);
 bool luaA_struct_has_member_name_type(lua_State* L, luaA_Type type, const char* member);
 
-const char* luaA_struct_next_member_name_type(lua_State* L, luaA_Type type, const char* member);
-
 luaA_Type luaA_struct_typeof_member_offset_type(lua_State* L, luaA_Type type, size_t offset);
 luaA_Type luaA_struct_typeof_member_name_type(lua_State* L, luaA_Type type, const char* member);
 
@@ -162,19 +158,19 @@ bool luaA_struct_registered_type(lua_State* L, luaA_Type type);
 */
 
 #define luaA_enum(L, type) luaA_enum_type(L, luaA_type(L, type), sizeof(type))
-#define luaA_enum_value(L, type, value, case_sensitive) luaA_enum_value_type(L, luaA_type(L, type), (type[]){value}, #value, case_sensitive);
-#define luaA_enum_value_name(L, type, value, name, case_sensitive) luaA_enum_value_type(L, luaA_type(L, type), (type[]){value}, name, case_sensitive);
+#define luaA_enum_value(L, type, value) luaA_enum_value_type(L, luaA_type(L, type), (type[]){value}, #value);
+#define luaA_enum_value_name(L, type, value, name) luaA_enum_value_type(L, luaA_type(L, type), (type[]){value}, name);
 
 #define luaA_enum_push(L, type, c_in) luaA_enum_push_type(L, luaA_type(L, type), c_in)
 #define luaA_enum_to(L, type, c_out, index) luaA_enum_to_type(L, luaA_type(L, type), c_out, index)
 
-#define luaA_enum_has_value(L, type, value) LuaA_enum_has_value_type(L, luaA_type(L, type), (type[]){value})
-#define luaA_enum_has_name(L, type, name) LuaA_enum_has_name_type(L, luaA_type(L, type), name)
+#define luaA_enum_has_value(L, type, value) luaA_enum_has_value_type(L, luaA_type(L, type), (type[]){value})
+#define luaA_enum_has_name(L, type, name) luaA_enum_has_name_type(L, luaA_type(L, type), name)
 
 #define luaA_enum_registered(L, type) luaA_enum_registered_type(L, luaA_type(L, type))
 
 void luaA_enum_type(lua_State* L, luaA_Type type, size_t size);
-void luaA_enum_value_type(lua_State *L, luaA_Type type, const void* value, const char* name, bool case_sensitive);
+void luaA_enum_value_type(lua_State *L, luaA_Type type, const void* value, const char* name);
 
 int luaA_enum_push_type(lua_State *L, luaA_Type type, const void* c_in);
 void luaA_enum_to_type(lua_State* L, luaA_Type type, void *c_out, int index);

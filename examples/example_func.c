@@ -8,13 +8,12 @@ static int fib(int n) {
 
 int main(int argc, char** argv) {
   
-  int start = 25;
-  
   lua_State* L = luaL_newstate();
   
   luaA_open(L);
   luaA_function(L, fib, int, int);
-  luaA_push(L, int, &start);
+  
+  lua_pushinteger(L, 25);
   luaA_call(L, fib);
   
   printf("Result: %i\n", (int)lua_tointeger(L, -1));
@@ -25,5 +24,4 @@ int main(int argc, char** argv) {
   lua_close(L);
   
   return 0;
-  
 }

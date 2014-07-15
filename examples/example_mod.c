@@ -22,9 +22,7 @@ int main(int argc, char **argv) {
   luaA_function(L, add_round, int, int, float);
   luaA_function(L, greet_many, void, char*, int);
   
-  lua_pushcfunction(L, C);
-  lua_setglobal(L, "C");
-  
+  lua_register(L, "C", C);
   luaL_dostring(L, "C(\"greet_many\", \"Daniel\", C(\"add_round\", 1, 2.7))");
   
   luaA_close(L);

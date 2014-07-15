@@ -6,6 +6,7 @@ typedef struct {
 } birdie;
 
 static birdie test_birdie;
+
 static birdie* get_instance_ptr(lua_State* L) {
   return &test_birdie;
 }
@@ -36,11 +37,8 @@ int main(int argc, char **argv) {
   luaA_struct_member(L, birdie, name, char*);
   luaA_struct_member(L, birdie, num_wings, int);
   
-  lua_pushcfunction(L, birdie_index);
-  lua_setglobal(L, "birdie_index");
-  
-  lua_pushcfunction(L, birdie_newindex);
-  lua_setglobal(L, "birdie_newindex");
+  lua_register(L, "birdie_index", birdie_index);
+  lua_register(L, "birdie_newindex", birdie_newindex);
   
   luaL_dostring(L, ""
     "Birdie = {}\n"
@@ -56,8 +54,9 @@ int main(int argc, char **argv) {
     "bird = Birdie()\n"
     "print(bird.name)\n"
     "print(bird.num_wings)\n"
-    "\n"
-    );
+    "bird.num_wings = 3\n"
+    "print(bird.num_wings)\n"
+    "\n");
   
   luaA_close(L);
   lua_close(L);
