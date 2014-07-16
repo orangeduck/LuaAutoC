@@ -147,7 +147,7 @@ static void luaA_to_pair(lua_State* L, luaA_Type t, void* c_out, int index) {
 }
 ```
 
-These are registered with `luaA_convert`.
+These are registered with `luaA_conversion`.
 
 ```c
 luaA_conversion(L, pair, luaA_push_pair, luaA_to_pair);
