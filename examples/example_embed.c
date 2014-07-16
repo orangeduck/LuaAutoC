@@ -5,22 +5,22 @@ typedef struct {
   int num_wings;
 } birdie;
 
-static birdie test_birdie;
+birdie test_birdie;
 
-static birdie* get_instance_ptr(lua_State* L) {
+birdie* get_instance_ptr(lua_State* L) {
   return &test_birdie;
 }
 
-static int birdie_index(lua_State* L) {
+int birdie_index(lua_State* L) {
   const char* membername = lua_tostring(L, -1);
   birdie* self = get_instance_ptr(L);
-  return luaA_struct_push_member_name(L, birdie, self, membername);
+  return luaA_struct_push_member_name(L, birdie, membername, self);
 }
 
-static int birdie_newindex(lua_State* L) {
+int birdie_newindex(lua_State* L) {
   const char* membername = lua_tostring(L, -2);
   birdie* self = get_instance_ptr(L);
-  luaA_struct_to_member_name(L, birdie, self, membername, -1);
+  luaA_struct_to_member_name(L, birdie, membername, self, -1);
   return 0;
 }
 

@@ -1,16 +1,33 @@
 #include "../lautoc.h"
 
-static int add_round(int x, float y) {
-  return (int)(x + y);
+/* Hello Module Begin */
+
+void hello_world(void) {
+  puts("Hello World!");
 }
 
-static void greet_many(char* person, int times) {
+void hello_repeat(int times) {
   for (int i = 0; i < times; i++) {
-    printf("Hello %s!\n", person);
+    hello_world();
   }
 }
 
-static int C(lua_State* L) {
+void hello_person(const char* person) {
+  printf("Hello %s!\n", person);
+}
+
+int hello_subcount(const char* greeting) {
+  int count = 0;
+  const char *tmp = greeting;
+  while((tmp = strstr(tmp, "hello"))) {
+    count++; tmp++;
+  }
+  return count;
+}
+
+/* Hello Module End */
+
+int C(lua_State* L) {
   return luaA_call_name(L, lua_tostring(L, 1));
 }
 
@@ -19,11 +36,18 @@ int main(int argc, char **argv) {
   lua_State* L = luaL_newstate();
   
   luaA_open(L);
-  luaA_function(L, add_round, int, int, float);
-  luaA_function(L, greet_many, void, char*, int);
+  luaA_function(L, hello_world, void);
+  luaA_function(L, hello_repeat, void, int);
+  luaA_function(L, hello_person, void, const char*);
+  luaA_function(L, hello_subcount, int, const char*);
   
   lua_register(L, "C", C);
-  luaL_dostring(L, "C(\"greet_many\", \"Daniel\", C(\"add_round\", 1, 2.7))");
+  
+  luaL_dostring(L,
+    "C('hello_world')\n"
+    "C('hello_person', 'Daniel')\n"
+    "C('hello_repeat', C('hello_subcount', 'hello hello'))\n"
+  );
   
   luaA_close(L);
   lua_close(L);

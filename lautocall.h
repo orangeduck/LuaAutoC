@@ -9,13 +9,14 @@
 #ifndef lautocall_h
 #define lautocall_h
 
+#define LUAA_EVAL(...) __VA_ARGS__
+
 /* Join Three Strings */
 #define LUAA_JOIN2(X, Y) X ## Y
 #define LUAA_JOIN3(X, Y, Z) X ## Y ## Z
 
 /* workaround for MSVC VA_ARGS expansion */
-#define LUAA_APPLY(FUNC, ...) LUAA_APPLIED(FUNC, (__VA_ARGS__))
-#define LUAA_APPLIED(FUNC, ARGS) FUNC ARGS
+#define LUAA_APPLY(FUNC, ARGS) LUAA_EVAL(FUNC ARGS)
 
 /* Argument Counter */
 #define LUAA_COUNT(...) LUAA_COUNT_COLLECT(_, ##__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
@@ -32,8 +33,9 @@
 #define LUAA_SUFFIX_ ~, _void,
 
 /* Declaration and Register Macros */
-#define LUAA_DECLARE(func, ret_t, count, suffix, ...) LUAA_APPLY(LUAA_JOIN3(luaA_function_declare, count, suffix), func, ret_t, ##__VA_ARGS__ )
-#define LUAA_REGISTER(L, func, ret_t, count, ...) LUAA_APPLY(LUAA_JOIN2(luaA_function_register, count), L, func, ret_t, ##__VA_ARGS__ )
+#define LUAA_DECLARE(func, ret_t, count, suffix, ...) LUAA_APPLY(LUAA_JOIN3(luaA_function_declare, count, suffix), (func, ret_t, ##__VA_ARGS__))
+//#define LUAA_DECLARE(func, ret_t, count, suffix, ...) LUAA_APPLY(LUAA_JOIN3(luaA_function_declare, count, suffix), (func, ret_t, ##__VA_ARGS__))
+#define LUAA_REGISTER(L, func, ret_t, count, ...) LUAA_APPLY(LUAA_JOIN2(luaA_function_register, count), (L, func, ret_t, ##__VA_ARGS__))
 
 /*
 ** MSVC does not allow nested functions

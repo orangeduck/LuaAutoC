@@ -119,12 +119,12 @@ void luaA_to_void_ptr(lua_State* L, luaA_Type,  void* c_out, int index);
 #define luaA_struct_member(L, type, member, member_type) luaA_struct_member_type(L, luaA_type(L, type), #member, luaA_type(L, member_type), offsetof(type, member))
 
 #define luaA_struct_push(L, type, c_in) luaA_struct_push_type(L, luaA_type(L, type), c_in)
-#define luaA_struct_push_member(L, type, cstruct, member) luaA_struct_push_member_offset_type(L, luaA_type(L, type), cstruct, offsetof(type, member))
-#define luaA_struct_push_member_name(L, type, cstruct, member) luaA_struct_push_member_name_type(L, luaA_type(L, type), cstruct, member)
+#define luaA_struct_push_member(L, type, member, c_in) luaA_struct_push_member_offset_type(L, luaA_type(L, type), offsetof(type, member), c_in)
+#define luaA_struct_push_member_name(L, type, member, c_in) luaA_struct_push_member_name_type(L, luaA_type(L, type), member, c_in)
 
 #define luaA_struct_to(L, type, c_out, index) luaA_struct_to_type(L, luaA_type(L, type), c_out, index)
-#define luaA_struct_to_member(L, type, cstruct, member, index) luaA_struct_to_member_offset_type(L, luaA_type(L, type), cstruct, offsetof(type, member), index)
-#define luaA_struct_to_member_name(L, type, cstruct, member, index) luaA_struct_to_member_name_type(L, luaA_type(L, type), cstruct, member, index)
+#define luaA_struct_to_member(L, type, member, c_out, index) luaA_struct_to_member_offset_type(L, luaA_type(L, type), offsetof(type, member), c_out, index)
+#define luaA_struct_to_member_name(L, type, member, c_out, index) luaA_struct_to_member_name_type(L, luaA_type(L, type), member, c_out, index)
 
 #define luaA_struct_has_member(L, type, member) luaA_struct_has_member_offset_type(L, luaA_type(L, type), offsetof(type, member))
 #define luaA_struct_has_member_name(L, type, member) luaA_struct_has_member_name_type(L, luaA_type(L, type), member)
@@ -138,12 +138,12 @@ void luaA_struct_type(lua_State* L, luaA_Type type);
 void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, size_t offset);
 
 int luaA_struct_push_type(lua_State* L, luaA_Type type, const void* c_in);
-int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, const void* cstruct, size_t offset);
-int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const void* cstruct, const char* member);
+int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, size_t offset, const void* c_in);
+int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const char* member, const void* c_in);
 
 void luaA_struct_to_type(lua_State* L, luaA_Type type, void* c_out, int index);
-void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, void* cstruct, size_t offset, int index);
-void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, void* cstruct, const char* member, int index);
+void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, size_t offset, void* c_out, int index);
+void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, const char* member, void* c_out, int index);
 
 bool luaA_struct_has_member_offset_type(lua_State* L, luaA_Type type, size_t offset);
 bool luaA_struct_has_member_name_type(lua_State* L, luaA_Type type, const char* member);

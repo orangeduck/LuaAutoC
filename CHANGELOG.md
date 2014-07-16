@@ -36,10 +36,13 @@ Here is a brief (incomplete) change log intended for people porting code.
 * Exposed argument and return stack sizes.  
 * Renamed `demos` folder to `examples` and all the files within.
 * Changed `luaA_call` and `luaA_call_name` to remove their arguments from stack, only leaving return values.
+* Switched argument order to `luaA_struct_push_member` so that member comes before input.
+* Switched argument order to `luaA_struct_push_member_name` so that member comes before input.
+* Switched argument order to `luaA_struct_to_member` so that member comes before output.
+* Switched argument order to `luaA_struct_to_member_name` so that member comes before output.
 
 
 TODO:
 
-* Update autogen script.
 * Finalize examples for readme etc.
 * Insert calls to `lua_checkstack` where possible.

@@ -1,27 +1,27 @@
 #include "../lautoc.h"
 
 typedef struct {
-  int x, y;
+  int fst, snd;
 } pair;
 
 static int luaA_push_pair(lua_State* L, luaA_Type t, const void* c_in) {
   pair* p = (pair*)c_in;
-  lua_pushinteger(L, p->x);
-  lua_pushinteger(L, p->y);
+  lua_pushinteger(L, p->fst);
+  lua_pushinteger(L, p->snd);
   return 2;
 }
 
 static void luaA_to_pair(lua_State* L, luaA_Type t, void* c_out, int index) {
   pair* p = (pair*)c_out;
-  p->y = lua_tointeger(L, index);
-  p->x = lua_tointeger(L, index-1);
+  p->snd = lua_tointeger(L, index);
+  p->fst = lua_tointeger(L, index-1);
 }
 
 typedef struct {
   int id;
-  char male;
-  float coolness;
-} person_details;
+  int legs;
+  float height;
+} table;
 
 int main(int argc, char **argv) {
 	
@@ -30,25 +30,27 @@ int main(int argc, char **argv) {
 	
   luaA_conversion(L, pair, luaA_push_pair, luaA_to_pair);
 	
-  luaA_struct(L, person_details);
-  luaA_struct_member(L, person_details, id, int);
-  luaA_struct_member(L, person_details, male, char);
-  luaA_struct_member(L, person_details, coolness, float);
-  
-  pair p = {1, 2};
-  person_details my_details = {0, 1, 125212.213};
-  
+  pair p = {20, 10};
   luaA_push(L, pair, &p);
   lua_pop(L, 2);
+  
+  luaA_struct(L, table);
+  luaA_struct_member(L, table, id, int);
+  luaA_struct_member(L, table, legs, int);
+  luaA_struct_member(L, table, height, float);
+  
+  table t = {0, 4, 0.72};
 
-  luaA_push(L, person_details, &my_details);
-  
-  lua_getfield(L, -1, "id");
+  luaA_push(L, table, &t);
+
+  lua_getfield(L, -1, "legs");
+  printf("legs: %i\n", (int)lua_tointeger(L, -1));
   lua_pop(L, 1);
-  
-  lua_getfield(L, -1, "male");
+
+  lua_getfield(L, -1, "height");
+  printf("height: %f\n", lua_tonumber(L, -1));
   lua_pop(L, 1);
-  
+
   lua_pop(L, 1);
   
   luaA_close(L);

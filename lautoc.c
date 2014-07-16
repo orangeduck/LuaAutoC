@@ -438,7 +438,7 @@ bool luaA_conversion_to_registered_type(lua_State* L, luaA_Type type_id) {
 ** Structs
 */
 
-int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, const void* cstruct, size_t offset) {
+int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, size_t offset, const void* c_in) {
   
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
   lua_pushinteger(L, type);
@@ -453,7 +453,7 @@ int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, const void
       lua_getfield(L, -1, "type");
       luaA_Type stype = lua_tointeger(L, -1);
       lua_pop(L, 4);
-      return luaA_push_type(L, stype, cstruct + offset);
+      return luaA_push_type(L, stype, c_in + offset);
     }
     
     lua_pop(L, 3);
@@ -469,7 +469,7 @@ int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, const void
   
 }
 
-int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const void* cstruct, const char* member) {
+int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const char* member, const void* c_in) {
 
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
   lua_pushinteger(L, type);
@@ -486,7 +486,7 @@ int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const void* 
       lua_getfield(L, -1, "offset");
       size_t offset = lua_tointeger(L, -1);
       lua_pop(L, 4);
-      return luaA_push_type(L, stype, cstruct + offset);
+      return luaA_push_type(L, stype, c_in + offset);
     }
     
     lua_pop(L, 3);
@@ -501,7 +501,7 @@ int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const void* 
   return 0;
 }
 
-void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, void* cstruct, size_t offset, int index) {
+void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, size_t offset, void* c_out, int index) {
 
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
   lua_pushinteger(L, type);
@@ -516,7 +516,7 @@ void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, void* cstru
       lua_getfield(L, -1, "type");
       luaA_Type stype = lua_tointeger(L, -1);
       lua_pop(L, 4);
-      luaA_to_type(L, stype, cstruct + offset, index);
+      luaA_to_type(L, stype, c_out + offset, index);
       return;
     }
     
@@ -532,7 +532,7 @@ void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, void* cstru
   
 }
 
-void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, void* cstruct, const char* member, int index) {
+void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, const char* member, void* c_out, int index) {
 
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
   lua_pushinteger(L, type);
@@ -550,7 +550,7 @@ void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, void* cstruct
       lua_getfield(L, -1, "offset");
       size_t offset = lua_tointeger(L, -1);
       lua_pop(L, 4);
-      luaA_to_type(L, stype, cstruct + offset, index);
+      luaA_to_type(L, stype, c_out + offset, index);
       return;
     }
     
@@ -750,7 +750,7 @@ int luaA_struct_push_type(lua_State* L, luaA_Type type, const void* c_in) {
         lua_getfield(L, -1, "name");
         const char* name = lua_tostring(L, -1);
         lua_pop(L, 1);
-        int num = luaA_struct_push_member_name_type(L, type, c_in, name);
+        int num = luaA_struct_push_member_name_type(L, type, name, c_in);
         if (num > 1) {
           lua_pop(L, 5);
           lua_pushfstring(L, "luaA_struct_push: Conversion pushed %i values to stack,"
@@ -783,7 +783,7 @@ void luaA_struct_to_type(lua_State* L, luaA_Type type, void* c_out, int index) {
   while (lua_next(L, index-1)) {
     
     if (lua_type(L, -2) == LUA_TSTRING) {
-      luaA_struct_to_member_name_type(L, type, c_out, lua_tostring(L, -2), -1);
+      luaA_struct_to_member_name_type(L, type, lua_tostring(L, -2), c_out, -1);
     }
     
     lua_pop(L, 1);
@@ -1107,6 +1107,12 @@ static int luaA_call_entry(lua_State* L) {
   
   lua_pop(L, 1);
   
+  /* Pop arguments from stack */
+  
+  for (int i = 0; i < arg_num; i++) {
+    lua_remove(L, -2);  
+  }
+  
   /* Get Function Pointer and Call */
   
   lua_getfield(L, -1, "auto_func");
@@ -1164,7 +1170,7 @@ int luaA_call_name(lua_State* L, const char* func_name) {
   return 0;
 }
 
-void luaA_function_register_type(lua_State* L, luaA_Funcptr src_func, luaA_Func auto_func, const char* name, luaA_Type ret_t, int num_args, ...) {
+void luaA_function_register_type(lua_State* L, void* src_func, luaA_Func auto_func, const char* name, luaA_Type ret_t, int num_args, ...) {
   
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "functions");
   lua_pushstring(L, name);
