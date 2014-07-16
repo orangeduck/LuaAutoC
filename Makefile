@@ -19,8 +19,8 @@ SHARED_LIB= $(SHARED_LIB_PREFIX)lautoc$(SHARED_LIB_SUFFIX)
 STATIC_LIB= $(STATIC_LIB_PREFIX)lautoc$(STATIC_LIB_SUFFIX)
 
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
-	LUA_INCLUDE_DIR?= -I/usr/include/lua5.2
-	LUA_LIBRARY?= -llua
+	LUA_INCLUDE_DIR?= -I/usr/include/lua5.2/
+	LUA_LIBRARY?= -llua5.2
 	LAC_CFLAGS+= -fPIC
 	LAC_LDFLAGS+= -fPIC
 	SHARED_LIB_PREFIX:=lib
@@ -29,8 +29,8 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 	STATIC_LIB_SUFFIX:=.a
 	EXE_SUFFIX:=
 else ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
-	LUA_INCLUDE_DIR?= -I/usr/include/lua5.2
-	LUA_LIBRARY?= -llua
+	LUA_INCLUDE_DIR?= -I/usr/include/lua5.2/
+	LUA_LIBRARY?= -llua5.2
 	LAC_CFLAGS+= -fPIC
 	LAC_LDFLAGS+= -fPIC
 	SHARED_LIB_PREFIX:=lib
@@ -53,7 +53,7 @@ endif
 all: $(SHARED_LIB) $(STATIC_LIB)
 
 $(SHARED_LIB): $(LAC)
-	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LDFLAGS) $(LAC_LDFLAGS) $(LAC_LIBS) -shared -o $@  
+	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LAC_CPPFLAGS) $(LDFLAGS) $(LAC_LDFLAGS) $(LAC_LIBS) -shared -o $@  
 
 $(STATIC_LIB): $(LAC)
 	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) -c
@@ -64,7 +64,7 @@ $(STATIC_LIB): $(LAC)
 examples: $(EXAMPLES_OUT)
 
 examples/example_%$(EXE_SUFFIX): examples/example_%.c $(LAC)
-	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LDFLAGS) $(LAC_LDFLAGS) $(LAC_LIBS) -o $@  
+	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LAC_CPPFLAGS) $(LDFLAGS) $(LAC_LDFLAGS) $(LAC_LIBS) -o $@  
 
 # Clean
 

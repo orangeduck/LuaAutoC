@@ -5,11 +5,14 @@
 
 /lib*.a
 /lib*.so
-/examples/examples_convert
-/examples/examples_embed
-/examples/examples_func
-/examples/examples_struct
-/examples/examples_mod
+/examples/example_basic
+/examples/example_enum
+/examples/example_convert
+/examples/example_embed
+/examples/example_func
+/examples/example_struct
+/examples/example_mod
+/examples/example_unnested
 
 /*.lib
 /*.dll
