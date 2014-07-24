@@ -438,7 +438,7 @@ FAQ
   
 * Nested Functions?
   
-  By standard LuaAutoC makes uses of nested functions. Almost all compilers support these, but if not LuaAutoC can still be used. Instead functions must be "declared" outside of the program, and then "registered" in the runtime. See `demo_unnested.c` for a clear example.
+  By standard LuaAutoC makes uses of nested functions. Almost all compilers support these, but if not LuaAutoC can still be used. Instead functions must be "declared" outside of the program, and then "registered" in the runtime. See `example_unnested.c` for a clear example.
   
 * Is LuaAutoC slow?
   
