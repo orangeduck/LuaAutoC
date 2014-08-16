@@ -11,6 +11,7 @@ void luaA_open(lua_State* L) {
   lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "stack_to");
   
   lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums");
   lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums_sizes");
   lua_newtable(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "functions");
@@ -69,6 +70,7 @@ void luaA_close(lua_State* L) {
   lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "stack_to");
   
   lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums");
   lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums_sizes");
   lua_pushnil(L); lua_setfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "functions");
@@ -440,7 +442,7 @@ bool luaA_conversion_to_registered_type(lua_State* L, luaA_Type type_id) {
 
 int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, size_t offset, const void* c_in) {
   
-  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushinteger(L, type);
   lua_gettable(L, -2);
   
@@ -503,7 +505,7 @@ int luaA_struct_push_member_name_type(lua_State* L, luaA_Type type, const char* 
 
 void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, size_t offset, void* c_out, int index) {
 
-  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushinteger(L, type);
   lua_gettable(L, -2);
   
@@ -568,7 +570,7 @@ void luaA_struct_to_member_name_type(lua_State* L, luaA_Type type, const char* m
 
 bool luaA_struct_has_member_offset_type(lua_State* L, luaA_Type type, size_t offset) {
 
-  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushinteger(L, type);
   lua_gettable(L, -2);
   
@@ -624,7 +626,7 @@ bool luaA_struct_has_member_name_type(lua_State* L, luaA_Type type, const char* 
 
 luaA_Type luaA_struct_typeof_member_offset_type(lua_State* L, luaA_Type type,  size_t offset) {
 
-  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushinteger(L, type);
   lua_gettable(L, -2);
   
@@ -691,6 +693,11 @@ void luaA_struct_type(lua_State* L, luaA_Type type) {
   lua_newtable(L);
   lua_settable(L, -3);
   lua_pop(L, 1);
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "luaA_structs_offset");
+  lua_pushinteger(L, type);
+  lua_newtable(L);
+  lua_settable(L, -3);
+  lua_pop(L, 1);
 }
 
 void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, luaA_Type mtype, size_t offset) {
@@ -708,10 +715,11 @@ void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, l
     lua_pushstring(L, member);  lua_setfield(L, -2, "name");
     
     lua_setfield(L, -2, member);
+    lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "luaA_structs_offset");
     lua_pushinteger(L, offset);
-    lua_getfield(L, -2, member);
-    lua_settable(L, -3);
-    lua_pop(L, 2);
+    lua_getfield(L, -3, member);
+    lua_settable(L,-3);
+    lua_pop(L, 3);
     return;
   }
   
