@@ -858,7 +858,7 @@ int luaA_enum_push_type(lua_State *L, luaA_Type type, const void* value) {
     }
     
     lua_pop(L, 3);
-    lua_pushfstring(L, "luaA_enum_push: Enum '%s' value %li not registered!", luaA_typename(L, type), (long)lvalue);
+    lua_pushfstring(L, "luaA_enum_push: Enum '%s' value %d not registered!", luaA_typename(L, type), lvalue);
     lua_error(L);
     return 0;
   }
@@ -1004,7 +1004,7 @@ void luaA_enum_value_type(lua_State *L, luaA_Type type, const void* value, const
     
     lua_newtable(L);
     
-    lua_Integer lvalue;
+    lua_Integer lvalue=0;
     memcpy(&lvalue, value, size);
     
     lua_pushinteger(L, lvalue);
