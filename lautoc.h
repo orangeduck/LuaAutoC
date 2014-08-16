@@ -114,6 +114,7 @@ void luaA_to_void_ptr(lua_State* L, luaA_Type,  void* c_out, int index);
 /*
 ** Structs
 */
+#define LUAA_INVALID_MEMBER_NAME NULL
 
 #define luaA_struct(L, type) luaA_struct_type(L, luaA_type(L, type))
 #define luaA_struct_member(L, type, member, member_type) luaA_struct_member_type(L, luaA_type(L, type), #member, luaA_type(L, member_type), offsetof(type, member))
@@ -133,6 +134,7 @@ void luaA_to_void_ptr(lua_State* L, luaA_Type,  void* c_out, int index);
 #define luaA_struct_typeof_member_name(L, type, member) luaA_struct_typeof_member_name_type(L, luaA_type(L, type), member)
 
 #define luaA_struct_registered(L, type) luaA_struct_registered_type(L, luaA_type(L, type))
+#define luaA_struct_next_member_name(L, type, member) luaA_struct_next_member_name_type(L, luaA_type(L,type), member)
 
 void luaA_struct_type(lua_State* L, luaA_Type type);
 void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, luaA_Type member_type, size_t offset);
@@ -152,6 +154,8 @@ luaA_Type luaA_struct_typeof_member_offset_type(lua_State* L, luaA_Type type, si
 luaA_Type luaA_struct_typeof_member_name_type(lua_State* L, luaA_Type type, const char* member);
 
 bool luaA_struct_registered_type(lua_State* L, luaA_Type type);
+
+const char* luaA_struct_next_member_name_type(lua_State* L, luaA_Type type, const char* member);
 
 /*
 ** Enums
