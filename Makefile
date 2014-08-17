@@ -56,7 +56,7 @@ $(SHARED_LIB): $(LAC)
 	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LAC_CPPFLAGS) $(LDFLAGS) $(LAC_LDFLAGS) $(LAC_LIBS) -shared -o $@  
 
 $(STATIC_LIB): $(LAC)
-	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) -c
+	$(CC) $^ $(CFLAGS) $(LAC_CFLAGS) $(LAC_CPPFLAGS) -c
 	$(AR) rcs $@ $(LAC_OBJ)
 
 # Examples
