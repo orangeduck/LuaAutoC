@@ -1049,6 +1049,33 @@ bool luaA_enum_registered_type(lua_State *L, luaA_Type type){
   return reg;
 }
 
+const char* luaA_enum_next_value_name_type(lua_State* L, luaA_Type type, const char* member) {
+
+  lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums");
+  lua_pushinteger(L, type);
+  lua_gettable(L, -2);
+  
+  if(!lua_isnil(L,-1)) {
+
+    if(!member) {
+      lua_pushnil(L);
+    } else {
+      lua_pushstring(L,member);
+    }
+    if(!lua_next(L,-2)) {
+      lua_pop(L,2);
+      return LUAA_INVALID_MEMBER_NAME;
+    }
+    const char* result = lua_tostring(L,-2);
+    lua_pop(L,4);
+    return result;
+  }
+  
+  lua_pop(L, 2);
+  lua_pushfstring(L, "luaA_enum_next_enum_name_type: Enum '%s' not registered!", luaA_typename(L, type));
+  lua_error(L);
+  return NULL;//can't be reached
+}
 /*
 ** Functions
 */
