@@ -688,7 +688,6 @@ luaA_Type luaA_struct_typeof_member_name_type(lua_State* L, luaA_Type type,  con
   
 }
 
-
 void luaA_struct_type(lua_State* L, luaA_Type type) {
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs");
   lua_pushinteger(L, type);
@@ -725,7 +724,7 @@ void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, l
 
     lua_pushinteger(L, offset);
     lua_getfield(L, -4, member);
-    lua_settable(L,-3);
+    lua_settable(L, -3);
     lua_pop(L, 4);
     return;
   }
@@ -830,8 +829,9 @@ const char* luaA_struct_next_member_name_type(lua_State* L, luaA_Type type, cons
   lua_pop(L, 2);
   lua_pushfstring(L, "luaA_struct_next_member: Struct '%s' not registered!", luaA_typename(L, type));
   lua_error(L);
-  return NULL;//can't be reached
+  return NULL;
 }
+
 /*
 ** Enums
 */
@@ -876,7 +876,6 @@ int luaA_enum_push_type(lua_State *L, luaA_Type type, const void* value) {
   return 0;
   
 }
-
 
 void luaA_enum_to_type(lua_State* L, luaA_Type type, void* c_out, int index) {
 
@@ -954,7 +953,6 @@ bool luaA_enum_has_value_type(lua_State* L, luaA_Type type, const void* value) {
   
   return false;
 }
-
 
 bool luaA_enum_has_name_type(lua_State* L, luaA_Type type, const char* name) {
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "enums");
@@ -1079,8 +1077,9 @@ const char* luaA_enum_next_value_name_type(lua_State* L, luaA_Type type, const c
   lua_pop(L, 2);
   lua_pushfstring(L, "luaA_enum_next_enum_name_type: Enum '%s' not registered!", luaA_typename(L, type));
   lua_error(L);
-  return NULL;//can't be reached
+  return NULL;
 }
+
 /*
 ** Functions
 */
