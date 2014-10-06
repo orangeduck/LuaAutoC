@@ -461,7 +461,7 @@ int luaA_struct_push_member_offset_type(lua_State* L, luaA_Type type, size_t off
     }
     
     lua_pop(L, 3);
-    lua_pushfstring(L, "luaA_struct_push_member: Member offset '%i' not registered for struct '%s'!", offset, luaA_typename(L, type));
+    lua_pushfstring(L, "luaA_struct_push_member: Member offset '%d' not registered for struct '%s'!", offset, luaA_typename(L, type));
     lua_error(L);
 
   }
@@ -525,7 +525,7 @@ void luaA_struct_to_member_offset_type(lua_State* L, luaA_Type type, size_t offs
     }
     
     lua_pop(L, 3);
-    lua_pushfstring(L, "luaA_struct_to_member: Member offset '%i' not registered for struct '%s'!", offset, luaA_typename(L, type));
+    lua_pushfstring(L, "luaA_struct_to_member: Member offset '%d' not registered for struct '%s'!", offset, luaA_typename(L, type));
     lua_error(L);
 
   }
@@ -645,7 +645,7 @@ luaA_Type luaA_struct_typeof_member_offset_type(lua_State* L, luaA_Type type,  s
     }
     
     lua_pop(L, 3);
-    lua_pushfstring(L, "luaA_struct_typeof_member: Member offset '%i' not registered for struct '%s'!", offset, luaA_typename(L, type));
+    lua_pushfstring(L, "luaA_struct_typeof_member: Member offset '%d' not registered for struct '%s'!", offset, luaA_typename(L, type));
     lua_error(L);
 
   }
@@ -695,6 +695,7 @@ void luaA_struct_type(lua_State* L, luaA_Type type) {
   lua_newtable(L);
   lua_settable(L, -3);
   lua_pop(L, 1);
+  
   lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
   lua_pushinteger(L, type);
   lua_newtable(L);
@@ -717,11 +718,15 @@ void luaA_struct_member_type(lua_State* L, luaA_Type type, const char* member, l
     lua_pushstring(L, member);  lua_setfield(L, -2, "name");
     
     lua_setfield(L, -2, member);
+    
     lua_getfield(L, LUA_REGISTRYINDEX, LUAA_REGISTRYPREFIX "structs_offset");
+    lua_pushinteger(L, type);
+    lua_gettable(L, -2);
+
     lua_pushinteger(L, offset);
-    lua_getfield(L, -3, member);
+    lua_getfield(L, -4, member);
     lua_settable(L,-3);
-    lua_pop(L, 3);
+    lua_pop(L, 4);
     return;
   }
   
@@ -762,7 +767,7 @@ int luaA_struct_push_type(lua_State* L, luaA_Type type, const void* c_in) {
         int num = luaA_struct_push_member_name_type(L, type, name, c_in);
         if (num > 1) {
           lua_pop(L, 5);
-          lua_pushfstring(L, "luaA_struct_push: Conversion pushed %i values to stack,"
+          lua_pushfstring(L, "luaA_struct_push: Conversion pushed %d values to stack,"
                              " don't know how to include in struct!", num);
           lua_error(L);
         }
