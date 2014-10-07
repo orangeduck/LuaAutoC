@@ -306,15 +306,14 @@ luaL_dostring(L,
 You can then wrap this function in whatever Lua interface you like. One nice idea is to create a table and set it's `__index` metamethod to return the C function of the same name.
 
 ```lua
-HelloMT = {}
-HelloMT.__index = function (table, key)
+Hello = {}
+Hello.__index = function (table, key)
   return function (...)
     return C(key, ...)
   end
 end
 
-Hello = {}
-setmetatable(Hello, HelloMT)
+setmetatable(Hello, Hello)
 
 Hello.hello_world()
 Hello.hello_person('Marcelo')
