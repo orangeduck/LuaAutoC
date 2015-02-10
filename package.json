@@ -1,5 +1,5 @@
 {
-  "name": "LauAutoC",
+  "name": "LuaAutoC",
   "version": "2.0.1",
   "repo": "orangeduck/LuaAutoC",
   "description": "Automagically use C Functions and Structs with the Lua API",
