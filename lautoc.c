@@ -1114,6 +1114,14 @@ static int luaA_call_entry(lua_State* L) {
   
   size_t arg_size = 0;
   size_t arg_num  = lua_rawlen(L, -1);
+
+  if (lua_gettop(L) < arg_num+2) {
+    lua_pop(L, 1);
+    lua_pushfstring(L, "luaA_call: Too few arguments to function!");
+    lua_error(L);
+    return 0;
+  }
+
   for (int i = 0; i < arg_num; i++) {
     lua_pushinteger(L, i+1);
     lua_gettable(L, -2);
