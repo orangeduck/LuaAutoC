@@ -96,7 +96,7 @@ for k,v in pairs(funcs) do
 
   local fstring = string.format("luaA_function(%s, %s", name, typename)
   for _, v in pairs(argtypes) do
-    local fstring = fstring .. string.format(", %s", v)
+    fstring = fstring .. string.format(", %s", v)
   end
   local fstring = fstring .. ");"
   
