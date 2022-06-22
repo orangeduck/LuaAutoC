@@ -8,9 +8,12 @@
 #ifndef lautoc_h
 #define lautoc_h
 
+#ifndef LUAA_LUAIMPLEMENTATION
+#define LUAA_LUAIMPLEMENTATION
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+#endif
 
 #include <stddef.h>
 #include <stdbool.h>
