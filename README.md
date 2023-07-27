@@ -282,7 +282,7 @@ int C(lua_State* L) {
 }
 ```
 
-We then just need to register those functions, and also register the `C` function to be avaliable from Lua.
+We then just need to register those functions, and also register the `C` function to be available from Lua.
 
 ```c
 luaA_function(L, hello_world, void);
@@ -386,7 +386,7 @@ For this to work you need to get a `luaA_Type` value. This can be found by feedi
 
 ### Managing Behaviour
 
-Often in C, the same types can have different meanings. For example an `int*` could either mean that a function wants an array of integers or that it outputs some integer. We can change the behaviour of Lua AutoC without changing the function signature by using typedefs and new conversion functions. Then on function registration you just use the newly defined type rather than the old one. Providing the types are true aliases there wont be any problems with converting types.
+Often in C, the same types can have different meanings. For example an `int*` could either mean that a function wants an array of integers or that it outputs some integer. We can change the behaviour of Lua AutoC without changing the function signature by using typedefs and new conversion functions. Then on function registration you just use the newly defined type rather than the old one. Providing the types are true aliases there won't be any problems with converting types.
 
 ```c
 static void print_int_list(int* list, int num_ints) {
@@ -418,7 +418,7 @@ As you can probably see, automatic wrapping and type conversion becomes hard whe
 Headers
 -------
 
-It isn't any fun writing out all the registration functions, so I've included a basic Lua script which will auto-generate LuaAutoC code for structs and functions from C header files. In general it works pretty well, but it is fairly basic, not a C parser, and wont cover all situations, so expect to have to do some cleaning up for complicated headers.
+It isn't any fun writing out all the registration functions, so I've included a basic Lua script which will auto-generate LuaAutoC code for structs and functions from C header files. In general it works pretty well, but it is fairly basic, not a C parser, and won't cover all situations, so expect to have to do some cleaning up for complicated headers.
 
 ```
 $ lua lautoc.lua ../Corange/include/assets/sound.h
@@ -458,7 +458,7 @@ FAQ
   
 * Is LuaAutoC slow?
   
-  The short answer is no. For most uses LuaAutoC has to lookup runtime information in the Lua registry, and for calling functions it has to duplicate some of the process involved in managing the stack, but for any normal codebase this overhead is minimal. If you are concerned about performance you can still wrap your functions manually, but perhaps if you are using a scripting language like Lua it wont be worth it anyway.
+  The short answer is no. For most uses LuaAutoC has to lookup runtime information in the Lua registry, and for calling functions it has to duplicate some of the process involved in managing the stack, but for any normal codebase this overhead is minimal. If you are concerned about performance you can still wrap your functions manually, but perhaps if you are using a scripting language like Lua it won't be worth it anyway.
 
 * Is this just macro hacks? Can I really use it in production code?
 
