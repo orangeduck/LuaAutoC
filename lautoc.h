@@ -206,7 +206,11 @@ enum {
   LUAA_ARGUMENT_STACK_SIZE = 2048
 };
 
+#ifdef __clang__
+typedef void (^luaA_Func)(void*, void*);
+#else
 typedef void (*luaA_Func)(void*, void*);
+#endif
 
 int luaA_call(lua_State* L, void* func_ptr);
 int luaA_call_name(lua_State* L, const char* func_name);
